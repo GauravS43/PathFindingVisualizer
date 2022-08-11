@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
 
 .flex{
     display: flex;
@@ -13,14 +15,28 @@
     left: 3%;
     width: 20%;
     height: 90%;
-    background-color: #C2EFEB;
+    background-color: #F02D7D;
+    opacity: 0.7;
     display: flex;
     justify-content: center;
     border-radius: 20px;
 }
 
-.panel_container button{
+button{
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 80px;
+    color: white;
+    font-size: 30px;
+    width: 50%;
     height: fit-content;
+    font-family: 'Nunito', sans-serif;
+    transition: 0.2s ease;
+}
+
+button:hover{
+    color: black;
+    background-color: white;
 }
 
 /*--------------START OF NEW ONE-----------*/
@@ -40,8 +56,5 @@
 .block{
     border: 1px solid black;
     transition: 0.2s ease;
-}
-
-.path{
-    background-color: red;
+    background-color: white;
 }
