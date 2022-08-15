@@ -9,6 +9,17 @@
     position: relative;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
+}
+
+h1{
+    width: 92%;
+    margin: 2.5%;
+    margin-top: -5%;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 50px;
+    text-align: center;
 }
 
 h2{
@@ -47,11 +58,8 @@ button:hover{
 
 .panel_container{
     position: absolute;
-    top: 5%;
-    left: 3%;
     width: 20%;
     height: 90%;
-    background-color: #F02D7D;
     opacity: 0.9;
     justify-content: center;
     border-radius: 20px;
@@ -90,4 +98,8 @@ button:hover{
     border: 1px solid #96ADE9;
     transition: 0.2s ease;
     background-color: white;
+    font-family: 'Nunito', sans-serif;
+    -webkit-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; 
 }

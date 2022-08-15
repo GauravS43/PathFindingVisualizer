@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import './index.css'
-import { dijkstra, clear, find, startingGraph } from "./algorithms"
+import { dijkstra, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights} from "./algorithms"
 //TODO
 //Assign Symbols and create legend
 //Create DropDown button and add more algorithms 
@@ -12,7 +12,7 @@ import { dijkstra, clear, find, startingGraph } from "./algorithms"
 const NodeGraphContext = React.createContext()
 const UpdateGraphContext = React.createContext()
 
-function SidePanel(){
+function SidePanel({weightGraph, updateWeightGraph}){
     const nodeGraph = React.useContext(NodeGraphContext)
     const updateNodeGraph = React.useContext(UpdateGraphContext)
     const [visible, setVisible] = React.useState(true)
@@ -22,16 +22,20 @@ function SidePanel(){
     }
 
     function restart(){
-        updateNodeGraph(startingGraph())
+        updateNodeGraph(startingNodeGraph())
+        updateWeightGraph(startingWeightGraph())
     }
 
     function visualize(){
-        let tempGraph = dijkstra(find(nodeGraph, 1), find(nodeGraph, 2), nodeGraph)
+        let tempGraph = dijkstra(find(nodeGraph, 1), find(nodeGraph, 2), nodeGraph, weightGraph)
         updateNodeGraph(tempGraph)
     }
 
     const style = {
-        transform: visible ? "translateY(0)" : "translateY(82%)"
+        transform: visible ? "translateY(0)" : "translateY(82%)",
+        backgroundColor: "#F02D7D",
+        top: "5%",
+        left: "2%"
     }
 
     function movePanel(){
@@ -56,7 +60,49 @@ function SidePanel(){
     )
 }
 
-function Node({x, y, reservedState, setReservedState, mouseState}){
+function SettingsPanel({updateWeightGraph, seeWeights, setSeeWeights}){
+    const [visible, setVisible] = React.useState(false)
+
+    const style = {
+        transform: visible ? "translateY(0)" : "translateY(88%)",
+        backgroundColor: "#19D719",
+        top: "5%",
+        left: "78%"
+    }
+
+    function movePanel(){
+        setVisible(prevState => !prevState)
+    }
+
+    function viewWeights(){
+        setSeeWeights(prevState => !prevState)
+    }
+
+    function randomizeW(){
+        updateWeightGraph(randomizeWeights())
+    }
+
+    return (
+        <div>
+            <div className="panel_container" style={style}>
+                <div className="arrows">
+                    <button id="up" onClick={movePanel}> 
+                        {String.fromCharCode((visible ? "9660" : "9650"))}
+                    </button>
+                </div>
+                <h1>Settings</h1>
+                <button onClick={viewWeights}>
+                    {seeWeights ? "Hide Weights" : "View Weights"}
+                </button>
+                <button onClick={randomizeW}>Randomize Weights</button>
+            </div>
+        </div>
+    )
+}
+
+
+
+function Node({x, y, reservedState, setReservedState, mouseState, weight, seeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)
     const updateNodeGraph = React.useContext(UpdateGraphContext)
     let state = nodeGraph[y][x]
@@ -96,12 +142,13 @@ function Node({x, y, reservedState, setReservedState, mouseState}){
             id={[x, y]}
             style={{backgroundColor: color}}
         >
+            {seeWeights ? weight : ""}
         </div>
     )
 }
 
 
-function Grid(){
+function Grid({weightGraph, seeWeights}){
     let row = []
     const [reservedState, setReservedState] = React.useState(-1)
     const [mouseState, setMouseState] = React.useState(false)
@@ -117,7 +164,17 @@ function Grid(){
 
     for (let y = 0; y < 22; y++){
         for (let x = 0; x < 41; x++){
-            row.push(<Node key={[x,y]} x={x} y={y} reservedState={reservedState} setReservedState={setReservedState} mouseState={mouseState}/>)
+            row.push(
+                <Node 
+                    key={[x,y]}
+                    x={x} y={y} 
+                    reservedState={reservedState} 
+                    setReservedState={setReservedState} 
+                    mouseState={mouseState} 
+                    weight={weightGraph[y][x]}
+                    seeWeights={seeWeights}
+                />
+            )
         }
     }
 
@@ -133,8 +190,9 @@ function Grid(){
 
 
 function App(){
-    const [nodeGraph, setNodeGraph] = React.useState(startingGraph())
-
+    const [nodeGraph, setNodeGraph] = React.useState(startingNodeGraph())
+    const [weightGraph, setWeightGraph] = React.useState(startingWeightGraph())
+    const [seeWeights, setSeeWeights] = React.useState(false)
     const [changed, setChanged] = React.useState(0)
 
     function updateNodeGraph(newGraph){
@@ -143,12 +201,20 @@ function App(){
         console.log(`changed: ${changed}`) //delete later
     }
 
+
+    function updateWeightGraph(newGraph){
+        setWeightGraph(newGraph)
+        setChanged(prevState => prevState + 1)
+        console.log(`changed: ${changed}`) //delete later
+    }
+
     return(
         <div className="wrapper">
             <NodeGraphContext.Provider value={nodeGraph}>
                 <UpdateGraphContext.Provider value={updateNodeGraph}>
-                    <Grid />
-                    <SidePanel/>
+                    <Grid weightGraph = {weightGraph} seeWeights={seeWeights}/>
+                    <SidePanel weightGraph = {weightGraph} updateWeightGraph={updateWeightGraph}/>
+                    <SettingsPanel updateWeightGraph={updateWeightGraph} seeWeights={seeWeights} setSeeWeights={setSeeWeights}/>
                 </UpdateGraphContext.Provider>
             </NodeGraphContext.Provider>
         </div>

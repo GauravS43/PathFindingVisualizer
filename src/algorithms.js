@@ -47,7 +47,7 @@ function foundPath(prev, end, checked, tempNodeGraph){
     }
 }
 
-function dijkstra(start, end, nodeGraph){ 
+function dijkstra(start, end, nodeGraph, weightGraph){ 
     var dist = {}
     var prev = {}
     let graphWithCoords = []
@@ -87,7 +87,8 @@ function dijkstra(start, end, nodeGraph){
         let neighbours = Neighbours(parseInt(pos[0]), parseInt(pos[1]), graphWithCoords)
         for (let i = 0; i < neighbours.length; i++){
             let neighbour = neighbours[i]
-            let tempDist = dist[u] +  1 //calcDist(u, neighbour)
+            let nPos = neighbour.split(',')
+            let tempDist = dist[u] +  weightGraph[nPos[1]][nPos[0]]
             if (tempDist < dist[neighbour] && dist[u] !== Infinity){
                 dist[neighbour] = tempDist
                 prev[neighbour] = u
@@ -116,7 +117,7 @@ function clear(nodeGraph){
     //2 = end
     //3 = viewed
     //4 = path
-function startingGraph(){
+function startingNodeGraph(){
     let nGraph = []
     for (let y = 0; y < 22; y++){
         let row = []
@@ -130,5 +131,28 @@ function startingGraph(){
     return nGraph
 }
 
+function startingWeightGraph(){
+    let wGraph = []
+    for (let y = 0; y < 22; y++){
+        let row = []
+        for (let x = 0; x < 41; x++){
+            row.push(1)
+        }
+        wGraph.push(row)
+    }
+    return wGraph
+}
 
-export {dijkstra, clear, find, startingGraph}
+function randomizeWeights(){
+    let wGraph = []
+    for (let y = 0; y < 22; y++){
+        let row = []
+        for (let x = 0; x < 41; x++){
+            row.push(Math.ceil(Math.random() * 9))
+        }
+        wGraph.push(row)
+    }
+    return wGraph
+}
+
+export {dijkstra, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights}
