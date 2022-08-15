@@ -1,37 +1,18 @@
-/*function setNodeState(nodeGraph, nodeX, nodeY, state){
-    let newNodeGraph = nodeGraph
-    newNodeGraph[nodeY][nodeX] = state
-    return newNodeGraph
-}*/
-
-function start(nodeGraph){
-    for (let y = 0; y < 10; y++){
-        if (nodeGraph[y].includes(1)){
-            for (let x = 0; x < 10; x++){
-                if (nodeGraph[y][x] === 1){
+function find(nodeGraph, target){
+    for (let y = 0; y < nodeGraph.length; y++){
+        if (nodeGraph[y].includes(target)){
+            for (let x = 0; x < nodeGraph[y].length; x++){
+                if (nodeGraph[y][x] === target){
                     return `${x},${y}`
                 }
             }
         }
     }
 }
-
-function end(nodeGraph){
-    for (let y = 0; y < 10; y++){
-        if (nodeGraph[y].includes(2)){
-            for (let x = 0; x < 10; x++){
-                if (nodeGraph[y][x] === 2){
-                    return `${x},${y}`
-                }
-            }
-        }
-    }
-}
-
 
 function Neighbours(x, y, graph){
     let neighbours = [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
-    neighbours = neighbours.map(coords => coords[0].toString().concat(",", coords[1].toString()))
+    neighbours = neighbours.map(coords => `${coords[0]},${coords[1]}`)
     let results = []
     for (let i = 0; i < 4; i++){
         if (graph.includes(neighbours[i])){
@@ -60,8 +41,9 @@ function foundPath(prev, end, checked, tempNodeGraph){
     }
 
     for (let i = 1; i < sequence.length - 1; i++){
-        setTimeout(() => document.getElementById(sequence[i]).style.backgroundColor = "yellow", checked * 100)
-        tempNodeGraph[parseInt(sequence[i][2])][parseInt(sequence[i][0])] = 4
+        let pos = sequence[i].split(',')
+        setTimeout(() => document.getElementById(sequence[i]).style.backgroundColor = "yellow", 1)//checked * 100)
+        tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = 4
     }
 }
 
@@ -69,8 +51,8 @@ function dijkstra(start, end, nodeGraph){
     var dist = {}
     var prev = {}
     let graphWithCoords = []
-    for (let y = 0; y < 10; y++){
-        for (let x = 0; x < 10; x++){
+    for (let y = 0; y < nodeGraph.length; y++){
+        for (let x = 0; x < nodeGraph[y].length; x++){
             if (nodeGraph[y][x] !== -1) {
                 let coords = `${x},${y}`
                 dist[coords] = Infinity
@@ -89,6 +71,7 @@ function dijkstra(start, end, nodeGraph){
 
     while (graphWithCoords.length > 0){
         let u = smallestDist(dist, graphWithCoords)
+        let pos = u.split(',')
         checked++
         Viewed.push(u)
         if (u === end){
@@ -96,12 +79,12 @@ function dijkstra(start, end, nodeGraph){
             break
         }
         if (u !== first) {
-            tempNodeGraph[parseInt(u[2])][parseInt(u[0])] = 3
-            setTimeout(() =>  document.getElementById(u).style.backgroundColor = "red",  (100 - graphWithCoords.length) * 100)        
+            tempNodeGraph[pos[1]][parseInt(pos[0])] = 3
+            setTimeout(() =>  document.getElementById(u).style.backgroundColor = "red", 1)//(400 - graphWithCoords.length) * 100)        
         }
     
         graphWithCoords.splice(graphWithCoords.indexOf(u), 1)
-        let neighbours = Neighbours(parseInt(u[0]), parseInt(u[2]), graphWithCoords)
+        let neighbours = Neighbours(parseInt(pos[0]), parseInt(pos[1]), graphWithCoords)
         for (let i = 0; i < neighbours.length; i++){
             let neighbour = neighbours[i]
             let tempDist = dist[u] +  1 //calcDist(u, neighbour)
@@ -114,11 +97,11 @@ function dijkstra(start, end, nodeGraph){
     return tempNodeGraph
 }
 
-function refresh(nodeGraph){
+function clear(nodeGraph){
     let newNodeGraph = nodeGraph
-    for (let y = 0; y < 10; y++){
-        for (let x = 0; x < 10; x++){
-            if (nodeGraph[y][x] > 2){
+    for (let y = 0; y < nodeGraph.length; y++){
+        for (let x = 0; x < nodeGraph[y].length; x++){
+            if (nodeGraph[y][x] > 2 || nodeGraph[y][x] < 0){
                 newNodeGraph[y][x] = 0
             }
         }
@@ -126,4 +109,26 @@ function refresh(nodeGraph){
     return newNodeGraph
 }
 
-export {dijkstra, refresh, start, end}
+    //TODO need to change
+    //-1 = wall
+    //0 = nothing
+    //1 = start
+    //2 = end
+    //3 = viewed
+    //4 = path
+function startingGraph(){
+    let nGraph = []
+    for (let y = 0; y < 22; y++){
+        let row = []
+        for (let x = 0; x < 41; x++){
+            row.push(0)
+        }
+        nGraph.push(row)
+    }
+    nGraph[5][20] = 1
+    nGraph[16][20] = 2
+    return nGraph
+}
+
+
+export {dijkstra, clear, find, startingGraph}

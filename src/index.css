@@ -1,13 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 
-
-.flex{
-    display: flex;
+*{
+    margin: 0;
+    padding: 0;
 }
 
-.clicked{
-    background-color: red;
+.wrapper{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
 }
+
+h2{
+    width: 92%;
+    margin: 2.5%;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+button{
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 30px;
+    color: white;
+    font-size: 30px;
+    width: 80%;
+    margin: 10%;
+    margin-top: 2%;
+    height: fit-content;
+    font-family: 'Nunito', sans-serif;
+    transition: 0.2s ease;
+}
+
+button:first-of-type{
+    margin-bottom: 0%;
+}
+
+button:hover{
+    color: black;
+    background-color: white;
+}
+
+/*Side Panels*/
 
 .panel_container{
     position: absolute;
@@ -16,45 +52,42 @@
     width: 20%;
     height: 90%;
     background-color: #F02D7D;
-    opacity: 0.7;
-    display: flex;
+    opacity: 0.9;
     justify-content: center;
     border-radius: 20px;
+    transition: 0.6s ease;
 }
 
-button{
-    background-color: transparent;
-    border: 2px solid white;
-    border-radius: 80px;
-    color: white;
-    font-size: 30px;
-    width: 50%;
-    height: fit-content;
-    font-family: 'Nunito', sans-serif;
-    transition: 0.2s ease;
+.arrows{
+    height: 10%;
 }
 
-button:hover{
-    color: black;
-    background-color: white;
+.arrows button{
+    width: 40%;
+    margin: 30%;
+    text-align: center;
+    margin-top: 2%;
 }
 
-/*--------------START OF NEW ONE-----------*/
+/*-----------GRID-----------*/
 
 .grid_container{
-    width: 50%;
+    width: 100%;
     margin: auto;
 }
 
 .grid{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 5vw);
-    grid-gap: 0px;
+    grid-template-rows: repeat(22, 2.425vw);
+    grid-template-columns: repeat(41, 2.425vw);
 }
 
 .block{
-    border: 1px solid black;
+    border: 1px solid #96ADE9;
     transition: 0.2s ease;
     background-color: white;
 }
