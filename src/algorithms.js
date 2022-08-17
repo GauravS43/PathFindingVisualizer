@@ -10,29 +10,29 @@ function find(nodeGraph, target){
     }
 }
 
-function Neighbours(x, y, graph){
+function Neighbours(x, y, nodeArr){
     let neighbours = [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
     neighbours = neighbours.map(coords => `${coords[0]},${coords[1]}`)
     let results = []
     for (let i = 0; i < 4; i++){
-        if (graph.includes(neighbours[i])){
+        if (nodeArr.includes(neighbours[i])){
             results.push(neighbours[i])
         } 
     }
     return results
 }
 
-function smallestDist(dist, graph){
-    let smallest = graph[0]
-    for (let i=0; i< graph.length; i++){
-        if (dist[graph[i]] < dist[smallest]){
-            smallest = graph[i]
+function smallestDist(dist, nodeArr){
+    let smallest = nodeArr[0]
+    for (let i=0; i< nodeArr.length; i++){
+        if (dist[nodeArr[i]] < dist[smallest]){
+            smallest = nodeArr[i]
         }
     }
     return smallest
 }
 
-function foundPath(prev, end, checked, tempNodeGraph){
+function foundPath(prev, end, tempNodeGraph, updatePathFound, updateSearching){
     let sequence = []
     let target = end
     while (target) {
@@ -42,67 +42,75 @@ function foundPath(prev, end, checked, tempNodeGraph){
 
     for (let i = 1; i < sequence.length - 1; i++){
         let pos = sequence[i].split(',')
-        setTimeout(() => document.getElementById(sequence[i]).style.backgroundColor = "yellow", 1)//checked * 100)
+        document.getElementById(sequence[i]).style.backgroundColor = "#FBFF00"
         tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = 4
     }
+
+    updatePathFound(true)
+    updateSearching()
 }
 
-function dijkstra(start, end, nodeGraph, weightGraph){ 
+function heuristic(node, target){
+    let nodeCoords = node.split(',')
+    let targetCoords = target.split(',')
+    return Math.abs(nodeCoords[0] - targetCoords[0]) + Math.abs(nodeCoords[1] - targetCoords[1])
+}
+
+
+function dijkstra_aStar(start, end, nodeGraph, weightGraph, updatePathFound, updateSearching, useHeuristic){ 
+    updateSearching()
     var dist = {}
     var prev = {}
-    let graphWithCoords = []
+    let nodeArr = []
     for (let y = 0; y < nodeGraph.length; y++){
         for (let x = 0; x < nodeGraph[y].length; x++){
             if (nodeGraph[y][x] !== -1) {
                 let coords = `${x},${y}`
                 dist[coords] = Infinity
                 prev[coords] = undefined
-                graphWithCoords.push(coords)
+                nodeArr.push(coords)
             }
         }
     }
 
     let tempNodeGraph = nodeGraph
-
     dist[start] = 0
-    let Viewed = []
-    let checked = 0
-    let first = smallestDist(dist, graphWithCoords)
 
-    while (graphWithCoords.length > 0){
-        let u = smallestDist(dist, graphWithCoords)
-        let pos = u.split(',')
-        checked++
-        Viewed.push(u)
-        if (u === end){
-            foundPath(prev, end, checked, tempNodeGraph)
+    while (nodeArr.length > 0){
+        let currentNode = smallestDist(dist, nodeArr)
+        let coords = currentNode.split(',')
+        if (currentNode === end){
+            setTimeout(() => foundPath(prev, end, tempNodeGraph, updatePathFound, updateSearching), (902 - nodeArr.length) * 8)        
             break
         }
-        if (u !== first) {
-            tempNodeGraph[pos[1]][parseInt(pos[0])] = 3
-            setTimeout(() =>  document.getElementById(u).style.backgroundColor = "red", 1)//(400 - graphWithCoords.length) * 100)        
+        if (currentNode !== start) {
+            tempNodeGraph[coords[1]][parseInt(coords[0])] = 3
+            setTimeout(() => document.getElementById(currentNode).style.backgroundColor = "#7E05FF", (902 - nodeArr.length) * 8)        
         }
     
-        graphWithCoords.splice(graphWithCoords.indexOf(u), 1)
-        let neighbours = Neighbours(parseInt(pos[0]), parseInt(pos[1]), graphWithCoords)
+        nodeArr.splice(nodeArr.indexOf(currentNode), 1)
+        let neighbours = Neighbours(parseInt(coords[0]), parseInt(coords[1]), nodeArr)
         for (let i = 0; i < neighbours.length; i++){
             let neighbour = neighbours[i]
-            let nPos = neighbour.split(',')
-            let tempDist = dist[u] +  weightGraph[nPos[1]][nPos[0]]
-            if (tempDist < dist[neighbour] && dist[u] !== Infinity){
+            let nCoords = neighbour.split(',')
+            let tempDist = dist[currentNode] +  weightGraph[nCoords[1]][nCoords[0]]
+            if (useHeuristic){
+                tempDist += heuristic(neighbour, end)
+            }
+            if (tempDist < dist[neighbour] && dist[currentNode] !== Infinity){
                 dist[neighbour] = tempDist
-                prev[neighbour] = u
+                prev[neighbour] = currentNode
             }
         }
     }
     return tempNodeGraph
 }
 
-function clear(nodeGraph){
+function clear(nodeGraph, statuses){
     let newNodeGraph = nodeGraph
     for (let y = 0; y < nodeGraph.length; y++){
         for (let x = 0; x < nodeGraph[y].length; x++){
-            if (nodeGraph[y][x] > 2 || nodeGraph[y][x] < 0){
+            if (statuses.includes(nodeGraph[y][x])){
                 newNodeGraph[y][x] = 0
             }
         }
@@ -155,4 +163,4 @@ function randomizeWeights(){
     return wGraph
 }
 
-export {dijkstra, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights}
+export {dijkstra_aStar, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights}

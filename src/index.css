@@ -77,6 +77,33 @@ button:hover{
     margin-top: 2%;
 }
 
+/*-----------DropDown-----------*/
+
+.dropdown{
+    position: relative;
+    display: block;
+}
+
+.dropdown_content {
+    font-family: 'Nunito', sans-serif;
+    color: white;
+    position: absolute;
+    width: 90%;
+    text-align: center;
+    z-index: 1;
+    margin-top: 10px;
+    margin-left: 5%;
+    border-radius: 10px;
+    background-color: lightcoral;
+    font-size: 18px;
+}
+  
+.dropdown_content h3:hover{
+    color: black;
+    background-color: white;
+    border-radius: 20px;
+}
+
 /*-----------GRID-----------*/
 
 .grid_container{
@@ -96,10 +123,29 @@ button:hover{
 
 .block{
     border: 1px solid #96ADE9;
-    transition: 0.2s ease;
     background-color: white;
     font-family: 'Nunito', sans-serif;
     -webkit-user-select: none; 
     -ms-user-select: none; 
     user-select: none; 
+}
+
+.symbol{
+    color: black;
+    margin: auto;
+    margin-top: 7%;
+    margin-left: 2%;
+}
+
+/*clearButton*/
+
+.clearButton{
+    color: lightgray;
+    border: 2px solid lightgray;
+}
+
+.clearButton:hover{
+    color: lightgray;
+    border: 2px solid lightgray;
+    background-color: transparent;
 }

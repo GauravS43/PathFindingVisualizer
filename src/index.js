@@ -1,117 +1,154 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import './index.css'
-import { dijkstra, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights} from "./algorithms"
+import { dijkstra_aStar, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights} from "./algorithms"
 //TODO
-//Assign Symbols and create legend
-//Create DropDown button and add more algorithms 
-//Add Advanced Settings
-//Implement Weights
+//Add more algorithms 
 //Change Animations and timing for graph being filled in
+//Add mazes and maze algorithms
+//Add additional goals
+//Add more interactivity after pathfound
 
 const NodeGraphContext = React.createContext()
 const UpdateGraphContext = React.createContext()
 
+//BREAK THIS DOWN INTO COMPONENTS
 function SidePanel({weightGraph, updateWeightGraph}){
     const nodeGraph = React.useContext(NodeGraphContext)
     const updateNodeGraph = React.useContext(UpdateGraphContext)
-    const [visible, setVisible] = React.useState(true)
 
-    function clearGrid(){
-        updateNodeGraph(clear(nodeGraph))
-    }
+    const [visiblePanel, setVisiblePanel] = React.useState(true)
+    const [algorithmsClicked, setAlgorithmsClicked] = React.useState(false)
+    const [funcIndex, setFuncIndex] = React.useState(0)
+   
+    const funcNameArr = ["Dijkstra", "A Star"]
+    const funcArr = [() => dijkstra_aStar(find(nodeGraph, 1), find(nodeGraph, 2), nodeGraph, weightGraph, updatePathFound, updateSearching, false),
+                     () => dijkstra_aStar(find(nodeGraph, 1), find(nodeGraph, 2), nodeGraph, weightGraph, updatePathFound, updateSearching, true)]
 
-    function restart(){
-        updateNodeGraph(startingNodeGraph())
-        updateWeightGraph(startingWeightGraph())
-    }
-
-    function visualize(){
-        let tempGraph = dijkstra(find(nodeGraph, 1), find(nodeGraph, 2), nodeGraph, weightGraph)
-        updateNodeGraph(tempGraph)
-    }
-
-    const style = {
-        transform: visible ? "translateY(0)" : "translateY(82%)",
-        backgroundColor: "#F02D7D",
+    const panelStyle = {
+        transform: visiblePanel ? "translateY(0)" : "translateY(82%)",
+        backgroundColor: "#FA5A00",
         top: "5%",
         left: "2%"
     }
 
-    function movePanel(){
-        setVisible(prevState => !prevState)
+    const dropDownStyle = {
+        display: algorithmsClicked ? "" : "none"
+    }
+
+    function changeAlgorithm(ref){
+        setFuncIndex(ref)
+        setAlgorithmsClicked(false)
+    }
+
+    const clearWallClass = find(nodeGraph, -1) ? "" : "clearButton"
+    function clearWalls(){
+        if (find(nodeGraph, -1)){
+            updateNodeGraph(clear(nodeGraph, [-1]))
+        }
+    }
+
+    const [pathFound, setPathFound] = React.useState(false)
+    function updatePathFound(state){
+        setPathFound(state)
+    }
+
+    const clearPathClass = pathFound ? "" : "clearButton"
+    function clearPaths(){
+        if (pathFound){
+            updateNodeGraph(clear(nodeGraph, [3, 4]))
+            updatePathFound(false)
+        }
+    }
+
+    const [searching, setSearching] = React.useState(false)
+    function updateSearching(){
+        setSearching(prevState => !prevState)
+    }
+
+    const restartClass = searching ? "clearButton" : ""
+    function restart(){
+        if (!searching){
+            updateNodeGraph(startingNodeGraph())
+            updateWeightGraph(startingWeightGraph())
+            updatePathFound(false)
+        }
     }
 
     return (
-        <div>
-            <div className="panel_container" style={style}>
-                <div className="arrows">
-                    <button id="up" onClick={movePanel}> 
-                        {String.fromCharCode((visible ? "9660" : "9650"))}
-                    </button>
+        <div className="panel_container" style={panelStyle}>
+            <div className="arrows">
+                <button onClick={() => setVisiblePanel(prevState => !prevState)}> 
+                    {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
+                </button>
+            </div>
+
+            <button onClick={() => updateNodeGraph(funcArr[funcIndex])}>Run</button>
+            <h2>Current Algorithm: {funcNameArr[funcIndex]}</h2>
+
+            <button className={clearWallClass} onClick={clearWalls}>
+                Clear Walls
+            </button>
+            <button className={clearPathClass} onClick={clearPaths}>
+                Clear Path
+            </button>
+            <button className={restartClass} onClick={restart}>
+                Restart
+            </button>
+            
+            <div className="dropdown">
+                <button onClick={() => setAlgorithmsClicked(prevState => !prevState)}>
+                    Algorithms &#8964;
+                </button>
+                <div className="dropdown_content" style={dropDownStyle}> 
+                    <h3 onClick={() => changeAlgorithm(0)}>Dijkstra</h3>
+                    <h3 onClick={() => changeAlgorithm(1)}>A Star</h3>
                 </div>
-                <button onClick={visualize}>Run</button>
-                <h2>Current Algorithm: Dijkstra</h2>
-                <button onClick={clearGrid}>Clear Grid</button>
-                <button onClick={restart}>Restart</button>
-                <button>Algorithms &#8964;</button>
             </div>
         </div>
     )
 }
 
-function SettingsPanel({updateWeightGraph, seeWeights, setSeeWeights}){
-    const [visible, setVisible] = React.useState(false)
+function AdvancedPanel({updateWeightGraph, seeWeights, setSeeWeights}){
+    const [visiblePanel, setVisiblePanel] = React.useState(false)
 
     const style = {
-        transform: visible ? "translateY(0)" : "translateY(88%)",
-        backgroundColor: "#19D719",
+        transform: visiblePanel ? "translateY(0)" : "translateY(88%)",
+        backgroundColor: "#2851F6",
         top: "5%",
         left: "78%"
     }
 
-    function movePanel(){
-        setVisible(prevState => !prevState)
-    }
-
-    function viewWeights(){
-        setSeeWeights(prevState => !prevState)
-    }
-
-    function randomizeW(){
-        updateWeightGraph(randomizeWeights())
-    }
-
     return (
-        <div>
-            <div className="panel_container" style={style}>
-                <div className="arrows">
-                    <button id="up" onClick={movePanel}> 
-                        {String.fromCharCode((visible ? "9660" : "9650"))}
-                    </button>
-                </div>
-                <h1>Settings</h1>
-                <button onClick={viewWeights}>
-                    {seeWeights ? "Hide Weights" : "View Weights"}
+        <div className="panel_container" style={style}>
+            <div className="arrows">
+                <button id="up" onClick={() => setVisiblePanel(prevState => !prevState)}> 
+                    {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
                 </button>
-                <button onClick={randomizeW}>Randomize Weights</button>
             </div>
+
+            <h1>Advanced</h1>
+            <button onClick={() => setSeeWeights(prevState => !prevState)}>
+                {seeWeights ? "Hide Weights" : "View Weights"}
+            </button>
+            <button onClick={() => updateWeightGraph(randomizeWeights())}>
+                Randomize Weights
+            </button>
         </div>
     )
 }
 
-
-
-function Node({x, y, reservedState, setReservedState, mouseState, weight, seeWeights}){
+function Node({x, y, reservedState, setReservedState, mouseState, weightGraph, seeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)
     const updateNodeGraph = React.useContext(UpdateGraphContext)
+
+    let weight = weightGraph[y][x]
     let state = nodeGraph[y][x]
-    let colors = ["black", "white", "purple", "green", ""]
-    //let symbols = [0, 0, 0, 9873, 0]
-    let color = colors[state + 1]
+    let symbol = ["", "", "A", "B", "", ""][state + 1]
+    let color = ["#96ADE9", "white", "#19D719", "#F02D7D", "", ""][state + 1]
 
     function handleEnter(){
-        if (mouseState && nodeGraph[y][x] < 1){
+        if (mouseState && (nodeGraph[y][x] < 1 | nodeGraph[y][x] > 2)){
             updateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
@@ -123,12 +160,14 @@ function Node({x, y, reservedState, setReservedState, mouseState, weight, seeWei
     }
 
     function handleDown(){
-        if (state !== 0 ){
+        if (state === 1 || state === 2 ){
             setReservedState(state)
-            updateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})
+        }
+        else if (state === -1){
+            updateNodeGraph(prevState => {prevState[y][x] = 0 ; return prevState})
         }
         else{
-            updateNodeGraph(prevState => {prevState[y][x] = -1; return prevState})
+            updateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
 
@@ -142,6 +181,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, weight, seeWei
             id={[x, y]}
             style={{backgroundColor: color}}
         >
+            <h2 className="symbol">{symbol}</h2>
             {seeWeights ? weight : ""}
         </div>
     )
@@ -150,6 +190,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, weight, seeWei
 
 function Grid({weightGraph, seeWeights}){
     let row = []
+    //reservedState might need to be reworked
     const [reservedState, setReservedState] = React.useState(-1)
     const [mouseState, setMouseState] = React.useState(false)
     
@@ -171,7 +212,7 @@ function Grid({weightGraph, seeWeights}){
                     reservedState={reservedState} 
                     setReservedState={setReservedState} 
                     mouseState={mouseState} 
-                    weight={weightGraph[y][x]}
+                    weightGraph={weightGraph}
                     seeWeights={seeWeights}
                 />
             )
@@ -201,7 +242,6 @@ function App(){
         console.log(`changed: ${changed}`) //delete later
     }
 
-
     function updateWeightGraph(newGraph){
         setWeightGraph(newGraph)
         setChanged(prevState => prevState + 1)
@@ -214,7 +254,7 @@ function App(){
                 <UpdateGraphContext.Provider value={updateNodeGraph}>
                     <Grid weightGraph = {weightGraph} seeWeights={seeWeights}/>
                     <SidePanel weightGraph = {weightGraph} updateWeightGraph={updateWeightGraph}/>
-                    <SettingsPanel updateWeightGraph={updateWeightGraph} seeWeights={seeWeights} setSeeWeights={setSeeWeights}/>
+                    <AdvancedPanel updateWeightGraph={updateWeightGraph} seeWeights={seeWeights} setSeeWeights={setSeeWeights}/>
                 </UpdateGraphContext.Provider>
             </NodeGraphContext.Provider>
         </div>
