@@ -32,7 +32,7 @@ function smallestDist(dist, nodeArr){
     return smallest
 }
 
-function foundPath(prev, end, tempNodeGraph, updatePathFound, updateSearching){
+function foundPath(prev, end, tempNodeGraph, updatePathFound, updateAnimating){
     let sequence = []
     let target = end
     while (target) {
@@ -47,7 +47,7 @@ function foundPath(prev, end, tempNodeGraph, updatePathFound, updateSearching){
     }
 
     updatePathFound(true)
-    updateSearching()
+    updateAnimating(false)
 }
 
 function heuristic(node, target){
@@ -57,11 +57,15 @@ function heuristic(node, target){
 }
 
 
-function dijkstra_aStar(start, end, nodeGraph, weightGraph, updatePathFound, updateSearching, useHeuristic){ 
-    updateSearching()
+function dijkstra_aStar(nodeGraph, weightGraph, updatePathFound, updateAnimating, useHeuristic){ 
+    updateAnimating(true)
+
+    const start = find(nodeGraph, 1)
+    const end = find(nodeGraph, 2)
     var dist = {}
     var prev = {}
     let nodeArr = []
+
     for (let y = 0; y < nodeGraph.length; y++){
         for (let x = 0; x < nodeGraph[y].length; x++){
             if (nodeGraph[y][x] !== -1) {
@@ -80,7 +84,7 @@ function dijkstra_aStar(start, end, nodeGraph, weightGraph, updatePathFound, upd
         let currentNode = smallestDist(dist, nodeArr)
         let coords = currentNode.split(',')
         if (currentNode === end){
-            setTimeout(() => foundPath(prev, end, tempNodeGraph, updatePathFound, updateSearching), (902 - nodeArr.length) * 8)        
+            setTimeout(() => foundPath(prev, end, tempNodeGraph, updatePathFound, updateAnimating), (902 - nodeArr.length) * 8)        
             break
         }
         if (currentNode !== start) {
@@ -106,11 +110,11 @@ function dijkstra_aStar(start, end, nodeGraph, weightGraph, updatePathFound, upd
     return tempNodeGraph
 }
 
-function clear(nodeGraph, statuses){
+function clear(nodeGraph, statusArr){
     let newNodeGraph = nodeGraph
     for (let y = 0; y < nodeGraph.length; y++){
         for (let x = 0; x < nodeGraph[y].length; x++){
-            if (statuses.includes(nodeGraph[y][x])){
+            if (statusArr.includes(nodeGraph[y][x])){
                 newNodeGraph[y][x] = 0
             }
         }
@@ -118,13 +122,6 @@ function clear(nodeGraph, statuses){
     return newNodeGraph
 }
 
-    //TODO need to change
-    //-1 = wall
-    //0 = nothing
-    //1 = start
-    //2 = end
-    //3 = viewed
-    //4 = path
 function startingNodeGraph(){
     let nGraph = []
     for (let y = 0; y < 22; y++){
@@ -163,4 +160,4 @@ function randomizeWeights(){
     return wGraph
 }
 
-export {dijkstra_aStar, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights}
+export {dijkstra_aStar, find, clear, startingNodeGraph, startingWeightGraph, randomizeWeights}
