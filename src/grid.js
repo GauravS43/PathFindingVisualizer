@@ -4,17 +4,22 @@ import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 
 function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const updateNodeGraph = React.useContext(NodeGraphContext)[2]
+    const updateNodeGraph = React.useContext(NodeGraphContext)[1]
+    const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
     const weightGraph = React.useContext(WeightGraphContext)[0]
 
     let weight = weightGraph[y][x]
     let state = nodeGraph[y][x]
-    let symbol = ["", "", "A", "B", "", "", "", ""][state + 1]
-    let color = ["#96ADE9", "white", "#19D719", "#F02D7D", "#7E05FF", "#FBFF00", "", ""][state + 1]
+    let symbol = ["", "", "A", "B", "", ""][state + 1]
+    let color = ["#96ADE9", "white", "#19D719", "#F02D7D", "", ""][state + 1]
+
+    if (state === 5 || state === 6){
+        console.log("old state found")
+    }
 
     function handleEnter(){
         if (mouseState && (nodeGraph[y][x] < 1 | nodeGraph[y][x] > 2)){
-            updateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
+            manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
 
@@ -33,10 +38,10 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
             setReservedState(state)
         }
         else if (state === -1){
-            updateNodeGraph(prevState => {prevState[y][x] = 0 ; return prevState})
+            manipulateNodeGraph(prevState => {prevState[y][x] = 0 ; return prevState})
         }
         else{
-            updateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
+            manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
 
@@ -56,7 +61,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
     )
 }
 
-export function Grid({seeWeights}){
+export function Grid({redraw, findPath, seeWeights}){
     const [reservedState, setReservedState] = React.useState(-1)
     const [mouseState, setMouseState] = React.useState(false)
     let row = []
@@ -68,6 +73,9 @@ export function Grid({seeWeights}){
     document.body.onmouseup = function() {
         setMouseState(false)
         setReservedState(-1)
+        if (redraw){
+            findPath(false)
+        }
     }
 
     for (let y = 0; y < 22; y++){

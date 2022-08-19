@@ -4,28 +4,28 @@ import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 
 function ClearButtons({animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const animateNodeGraph = React.useContext(NodeGraphContext)[1]
-    const updateNodeGraph = React.useContext(NodeGraphContext)[2]
+    const updateNodeGraph= React.useContext(NodeGraphContext)[1]
+    const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
 
     function clearWalls(){
         if (find(nodeGraph, -1) && !animating){
-            updateNodeGraph(clear(nodeGraph, [-1]))
+            manipulateNodeGraph(clear(nodeGraph, [-1]))
         }
     }
 
     function clearPaths(){
         if (pathFound){
             setPathFound(false)
-            animateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
+            updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         }
     }
 
     function restart(){
         if (!animating){
-            animateNodeGraph(startingNodeGraph())
-            updateWeightGraph(startingWeightGraph())
             setPathFound(false)
+            updateNodeGraph(startingNodeGraph())
+            updateWeightGraph(startingWeightGraph())
         }
     }
 
@@ -60,22 +60,23 @@ function AlgorithmsDropDown({setFuncIndex}){
             <div className="dropdown_content" style={{display: algorithmsClicked ? "" : "none"}}> 
                 <h3 onClick={() => changeAlgorithm(0)}>Dijkstra</h3>
                 <h3 onClick={() => changeAlgorithm(1)}>A Star</h3>
+
             </div>
         </div>
     )
 }
 
 
-function SidePanel({funcIndex, setFuncIndex, funcArr, animating, pathFound, setPathFound}){
+function SidePanel({findPath, funcIndex, setFuncIndex, funcArr, animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const animateNodeGraph = React.useContext(NodeGraphContext)[1]
+    const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
     const [visiblePanel, setVisiblePanel] = React.useState(true)
     const funcNameArr = ["Dijkstra", "A Star"]
 
-    function findPath(){
-        animateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
-        setTimeout(() => animateNodeGraph(funcArr[funcIndex]), 1)
+    function findP(){
+        updateNodeGraph(clear(nodeGraph, [3, 4]))
+        setTimeout(() => findPath(true), 1)
     }
 
     return (
@@ -85,7 +86,7 @@ function SidePanel({funcIndex, setFuncIndex, funcArr, animating, pathFound, setP
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
                 </button>
             </div>
-            <button className="first_button" onClick={findPath}>Run</button>
+            <button className="first_button" onClick={findP}>Run</button>
             <h2>Current Algorithm: {funcNameArr[funcIndex]}</h2>
             <AlgorithmsDropDown setFuncIndex={setFuncIndex}/>
             <ClearButtons animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
@@ -95,7 +96,7 @@ function SidePanel({funcIndex, setFuncIndex, funcArr, animating, pathFound, setP
 
 function AdvancedPanel({animating, seeWeights, setSeeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const animateNodeGraph = React.useContext(NodeGraphContext)[1]
+    const updateNodeGraph = React.useContext(NodeGraphContext)[1]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
     const [visiblePanel, setVisiblePanel] = React.useState(false)
 
@@ -108,7 +109,7 @@ function AdvancedPanel({animating, seeWeights, setSeeWeights}){
     function randomizeW(){
         if (!animating){
             updateWeightGraph(randomizeWeights())
-            animateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
+            updateNodeGraph(clear(nodeGraph, [3, 4]))
         }
     }
 

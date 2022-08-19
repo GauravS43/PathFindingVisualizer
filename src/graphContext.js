@@ -10,7 +10,5 @@ const WeightGraphContext = React.createContext()
 //2 = end
 //3 = viewed
 //4 = path
-//5 = animatingViewed
-//6 = animatingPath
 
 export {NodeGraphContext, WeightGraphContext}
