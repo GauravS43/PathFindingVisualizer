@@ -43,7 +43,7 @@ function foundPath(prev, end, tempNodeGraph, updatePathFound, updateAnimating){
     for (let i = 1; i < sequence.length - 1; i++){
         let pos = sequence[i].split(',')
         document.getElementById(sequence[i]).style.backgroundColor = "#FBFF00"
-        tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = 4
+        tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = 6
     }
 
     updatePathFound(true)
@@ -55,7 +55,6 @@ function heuristic(node, target){
     let targetCoords = target.split(',')
     return Math.abs(nodeCoords[0] - targetCoords[0]) + Math.abs(nodeCoords[1] - targetCoords[1])
 }
-
 
 function dijkstra_aStar(nodeGraph, weightGraph, updatePathFound, updateAnimating, useHeuristic){ 
     updateAnimating(true)
@@ -88,8 +87,68 @@ function dijkstra_aStar(nodeGraph, weightGraph, updatePathFound, updateAnimating
             break
         }
         if (currentNode !== start) {
-            tempNodeGraph[coords[1]][parseInt(coords[0])] = 3
+            tempNodeGraph[coords[1]][parseInt(coords[0])] = 5
             setTimeout(() => document.getElementById(currentNode).style.backgroundColor = "#7E05FF", (902 - nodeArr.length) * 8)        
+        }
+    
+        nodeArr.splice(nodeArr.indexOf(currentNode), 1)
+        let neighbours = Neighbours(parseInt(coords[0]), parseInt(coords[1]), nodeArr)
+        for (let i = 0; i < neighbours.length; i++){
+            let neighbour = neighbours[i]
+            let nCoords = neighbour.split(',')
+            let tempDist = dist[currentNode] +  weightGraph[nCoords[1]][nCoords[0]]
+            if (useHeuristic){
+                tempDist += heuristic(neighbour, end)
+            }
+            if (tempDist < dist[neighbour] && dist[currentNode] !== Infinity){
+                dist[neighbour] = tempDist
+                prev[neighbour] = currentNode
+            }
+        }
+    }
+    return tempNodeGraph
+}
+
+function quick_dijkstra_aStar(nodeGraph, weightGraph, useHeuristic){
+    const start = find(nodeGraph, 1)
+    const end = find(nodeGraph, 2)
+    var dist = {}
+    var prev = {}
+    let nodeArr = []
+
+    for (let y = 0; y < nodeGraph.length; y++){
+        for (let x = 0; x < nodeGraph[y].length; x++){
+            if (nodeGraph[y][x] !== -1) {
+                let coords = `${x},${y}`
+                dist[coords] = Infinity
+                prev[coords] = undefined
+                nodeArr.push(coords)
+            }
+        }
+    }
+
+    let tempNodeGraph = nodeGraph
+    dist[start] = 0
+
+    while (nodeArr.length > 0){
+        let currentNode = smallestDist(dist, nodeArr)
+        let coords = currentNode.split(',')
+        if (currentNode === end){
+            let sequence = []
+            let target = end
+            while (target) {
+                sequence.unshift(target)
+                target = prev[target]
+            }
+        
+            for (let i = 1; i < sequence.length - 1; i++){
+                let pos = sequence[i].split(',')
+                tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = 4
+            }
+            break
+        }
+        if (currentNode !== start) {
+            tempNodeGraph[coords[1]][parseInt(coords[0])] = 3
         }
     
         nodeArr.splice(nodeArr.indexOf(currentNode), 1)
@@ -160,4 +219,4 @@ function randomizeWeights(){
     return wGraph
 }
 
-export {dijkstra_aStar, find, clear, startingNodeGraph, startingWeightGraph, randomizeWeights}
+export {dijkstra_aStar, quick_dijkstra_aStar, find, clear, startingNodeGraph, startingWeightGraph, randomizeWeights}

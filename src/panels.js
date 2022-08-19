@@ -1,10 +1,11 @@
 import React from "react"
-import { dijkstra_aStar, clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights} from "./algorithms"
+import {clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights} from "./algorithms"
 import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 
 function ClearButtons({animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const updateNodeGraph = React.useContext(NodeGraphContext)[1]
+    const animateNodeGraph = React.useContext(NodeGraphContext)[1]
+    const updateNodeGraph = React.useContext(NodeGraphContext)[2]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
 
     function clearWalls(){
@@ -15,31 +16,31 @@ function ClearButtons({animating, pathFound, setPathFound}){
 
     function clearPaths(){
         if (pathFound){
-            updateNodeGraph(clear(nodeGraph, [3, 4]))
             setPathFound(false)
+            animateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         }
     }
 
     function restart(){
         if (!animating){
-            updateNodeGraph(startingNodeGraph())
+            animateNodeGraph(startingNodeGraph())
             updateWeightGraph(startingWeightGraph())
             setPathFound(false)
         }
     }
 
     return(
-        <>
-            <button className={find(nodeGraph, -1) ? "" : "clearButton"} onClick={clearWalls}>
+        <div>
+            <button className={find(nodeGraph, -1) ? "" : "clear_button"} onClick={clearWalls}>
                 Clear Walls
             </button>
-            <button className={pathFound ? "" : "clearButton"} onClick={clearPaths}>
+            <button className={pathFound ? "" : "clear_button"} onClick={clearPaths}>
                 Clear Path
             </button>
-            <button className={animating ? "clearButton" : ""} onClick={restart}>
+            <button className={animating ? "clear_button" : ""} onClick={restart}>
                 Restart
             </button>
-        </>
+        </div>
     )
 }
 
@@ -65,56 +66,49 @@ function AlgorithmsDropDown({setFuncIndex}){
 }
 
 
-function SidePanel({animating, setAnimating, pathFound, setPathFound}){
+function SidePanel({funcIndex, setFuncIndex, funcArr, animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const updateNodeGraph = React.useContext(NodeGraphContext)[1]
-    const weightGraph = React.useContext(WeightGraphContext)[0]
+    const animateNodeGraph = React.useContext(NodeGraphContext)[1]
 
     const [visiblePanel, setVisiblePanel] = React.useState(true)
-
-    const [funcIndex, setFuncIndex] = React.useState(0)
     const funcNameArr = ["Dijkstra", "A Star"]
-    const funcArr = [() => dijkstra_aStar(nodeGraph, weightGraph, setPathFound, setAnimating, false),
-                     () => dijkstra_aStar(nodeGraph, weightGraph, setPathFound, setAnimating, true)]
-
 
     function findPath(){
-        updateNodeGraph(clear(nodeGraph, [3, 4]))
-        setTimeout(() => updateNodeGraph(funcArr[funcIndex]), 5)
+        animateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
+        setTimeout(() => animateNodeGraph(funcArr[funcIndex]), 1)
     }
 
     return (
-        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(82%)"}}>
+        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(100%)"}}>
             <div className="arrows">
                 <button onClick={() => setVisiblePanel(prevState => !prevState)}> 
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
                 </button>
             </div>
-            <button onClick={findPath}>Run</button>
+            <button className="first_button" onClick={findPath}>Run</button>
             <h2>Current Algorithm: {funcNameArr[funcIndex]}</h2>
-            <ClearButtons animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
             <AlgorithmsDropDown setFuncIndex={setFuncIndex}/>
+            <ClearButtons animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
         </div>
     )
 }
 
 function AdvancedPanel({animating, seeWeights, setSeeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
-    const updateNodeGraph = React.useContext(NodeGraphContext)[1]
+    const animateNodeGraph = React.useContext(NodeGraphContext)[1]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
     const [visiblePanel, setVisiblePanel] = React.useState(false)
 
     const style = {
-        transform: visiblePanel ? "translateY(0)" : "translateY(88%)",
+        transform: visiblePanel ? "translateY(0)" : "translateY(108%)",
         backgroundColor: "#2851F6",
-        top: "5%",
         left: "78%"
     }
 
     function randomizeW(){
         if (!animating){
-            updateNodeGraph(clear(nodeGraph, [3, 4]))
             updateWeightGraph(randomizeWeights())
+            animateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         }
     }
 
@@ -130,9 +124,10 @@ function AdvancedPanel({animating, seeWeights, setSeeWeights}){
             <button onClick={() => setSeeWeights(prevState => !prevState)}>
                 {seeWeights ? "Hide Weights" : "View Weights"}
             </button>
-            <button className={animating ? "clearButton" : ""} onClick={randomizeW}>
+            <button className={animating ? "clear_button" : ""} onClick={randomizeW}>
                 Randomize Weights
             </button>
+
         </div>
     )
 }
