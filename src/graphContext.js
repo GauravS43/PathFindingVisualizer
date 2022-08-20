@@ -11,4 +11,14 @@ const WeightGraphContext = React.createContext()
 //3 = viewed
 //4 = path
 
+//TODO
+//Add error messages if start or end node doesn't exist or if path is impossible
+//Add total distance 
+//Add more algorithms 
+//Change Animations and timing for graph being filled in
+//Add mazes and maze algorithms
+//Add additional goals
+
+//CLEARPATH NOT WORKING
+
 export {NodeGraphContext, WeightGraphContext}

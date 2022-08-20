@@ -1,6 +1,6 @@
 import {find, smallestDist, Neighbours, heuristic} from "./algorithms"
 
-function updated_dijkstra_aStar(nodeGraph, weightGraph, useHeuristic){
+function updated_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
     const start = find(nodeGraph, 1)
     const end = find(nodeGraph, 2)
     var dist = {}
@@ -36,15 +36,15 @@ function updated_dijkstra_aStar(nodeGraph, weightGraph, useHeuristic){
             for (let i = 1; i < sequence.length - 1; i++){
                 let pos = sequence[i].split(',')
                 animateOrder[0].push(sequence[i])
-                animateOrder[1].push(4)
-                tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = 4
+                animateOrder[1].push(stateArr[1])
+                tempNodeGraph[parseInt(pos[1])][parseInt(pos[0])] = stateArr[1]
             }
             break
         }
         if (currentNode !== start) {
             animateOrder[0].push(currentNode)
-            animateOrder[1].push(3)
-            tempNodeGraph[coords[1]][parseInt(coords[0])] = 3
+            animateOrder[1].push(stateArr[0])
+            tempNodeGraph[coords[1]][parseInt(coords[0])] = stateArr[0]
         }
     
         nodeArr.splice(nodeArr.indexOf(currentNode), 1)
@@ -72,7 +72,7 @@ function updateScreen(animate, order, setPathFound, setAnimating){
 
     for (let i = 0; i < order[0].length; i++){
         let delay = animate ? i : 0
-        setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 3], delay * 8)
+        setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 5], delay * 8)
     }
     
     if (animate){

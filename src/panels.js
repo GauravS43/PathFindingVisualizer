@@ -75,7 +75,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, funcArr, animating, pathF
     const funcNameArr = ["Dijkstra", "A Star"]
 
     function findP(){
-        updateNodeGraph(clear(nodeGraph, [3, 4]))
+        updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         setTimeout(() => findPath(true), 1)
     }
 
@@ -109,7 +109,7 @@ function AdvancedPanel({animating, seeWeights, setSeeWeights}){
     function randomizeW(){
         if (!animating){
             updateWeightGraph(randomizeWeights())
-            updateNodeGraph(clear(nodeGraph, [3, 4]))
+            updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         }
     }
 
