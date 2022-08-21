@@ -2,28 +2,30 @@ import React from "react"
 import ReactDOM from "react-dom"
 import './index.css'
 
-import {clear, startingNodeGraph, startingWeightGraph} from "./algorithms"
-import {updated_dijkstra_aStar, updateScreen} from "./pfAlgorithms"
+import {clear, find, startingNodeGraph, startingWeightGraph} from "./algorithms"
+import {depthFirst, updated_dijkstra_aStar, updateScreen} from "./pfAlgorithms"
 
 import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 import {SidePanel, AdvancedPanel} from "./panels"
 import {Grid} from "./grid"
 
-function App(){
+function App()
+{
     const [nodeGraph, setNodeGraph] = React.useState(startingNodeGraph())
     const [weightGraph, setWeightGraph] = React.useState(startingWeightGraph())
     
-    const [seeWeights, setSeeWeights] = React.useState(true)
+    const [seeWeights, setSeeWeights] = React.useState(false)
     const [pathFound, setPathFound] = React.useState(false)
     const [animating, setAnimating] = React.useState(false)
 
     const [changed, setChanged] = React.useState(0)
-    //const [cost, setCost] = React.useState(0)
+    const [cost, setCost] = React.useState(0)
 
     const [funcIndex, setFuncIndex] = React.useState(0)
-    const funcArr = [() => updated_dijkstra_aStar(nodeGraph, weightGraph, false),
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, true)
-                    ]             
+    const funcArr = [() => updated_dijkstra_aStar(nodeGraph, weightGraph, [5,6], false),
+                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [5,6], true),
+                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3,4], false),
+                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3,4], true)]
                          
     function updateWeightGraph(newGraph){
         setWeightGraph(newGraph)
@@ -32,6 +34,7 @@ function App(){
 
     function updateNodeGraph(newGraph){
         setNodeGraph(newGraph)
+        if (!find(newGraph, 4)) setCost(0)
         setChanged(prevState => prevState + 1)
     }
 
@@ -40,17 +43,25 @@ function App(){
         setChanged(prevState => prevState + 1)
         if (pathFound){
             setNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
-            let newGraph = []
-            setTimeout(function() {newGraph = updated_dijkstra_aStar(nodeGraph, weightGraph, [3,4], false)}, 1)
-            setTimeout(() => setNodeGraph(newGraph[0]), 1)
+            let pfResults = []
+            setTimeout(function() {pfResults = funcArr[funcIndex + 2]()}, 1)
+            setTimeout(() => setNodeGraph(pfResults[0]), 1)
+            setTimeout(() => setCost(pfResults[2]), 1)
             setTimeout(() => setChanged(prevState => prevState + 1), 1)
         }
     }
 
     function findPath(animate){
-        let stateArr = animate ? [5, 6] : [3, 4]
-        let [newGraph, order] = updated_dijkstra_aStar(nodeGraph, weightGraph, stateArr, false)
-        if (animate) updateScreen(animate, order, setPathFound, setAnimating)
+        let [newGraph, order, newCost] =  funcArr[funcIndex]()
+        updateScreen(animate, order, setPathFound, setAnimating)
+        setNodeGraph(newGraph)
+        setCost(newCost)
+        setChanged(prevState => prevState + 1)
+    }
+
+    function dfs(){
+        let [newGraph, order] = depthFirst(nodeGraph)
+        updateScreen(true, order, setPathFound, setAnimating)
         setNodeGraph(newGraph)
         setChanged(prevState => prevState + 1)
     }
@@ -60,10 +71,11 @@ function App(){
             <NodeGraphContext.Provider value={[nodeGraph, updateNodeGraph, manipulateNodeGraph]}>
                 <WeightGraphContext.Provider value={[weightGraph, updateWeightGraph]}>
                     <p className="debug">{changed}</p>
-                    <h3 className="cost" onClick={() => console.log(nodeGraph)}>Total Cost: {/*cost*/}</h3>
+                    <h3 className="cost" onClick={() => console.log(nodeGraph)}>Total Cost: {cost}</h3>
+                    <button onClick={dfs}>TEST</button>
 
                     <Grid findPath={findPath} seeWeights={seeWeights}/>
-                    <SidePanel findPath= {findPath} funcIndex={funcIndex} setFuncIndex={setFuncIndex} funcArr={funcArr} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
+                    <SidePanel findPath= {findPath} funcIndex={funcIndex} setFuncIndex={setFuncIndex} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
                     <AdvancedPanel animating={animating} seeWeights={seeWeights} setSeeWeights={setSeeWeights}/>
                 </WeightGraphContext.Provider>
             </NodeGraphContext.Provider>

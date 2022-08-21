@@ -67,7 +67,7 @@ function AlgorithmsDropDown({setFuncIndex}){
 }
 
 
-function SidePanel({findPath, funcIndex, setFuncIndex, funcArr, animating, pathFound, setPathFound}){
+function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
