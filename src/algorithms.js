@@ -10,7 +10,7 @@ function find(nodeGraph, target){
     }
 }
 
-function Neighbours(x, y, nodeArr){
+function findNeighbours(x, y, nodeArr){
     let neighbours = [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
     neighbours = neighbours.map(coords => `${coords[0]},${coords[1]}`)
     let results = []
@@ -24,7 +24,7 @@ function Neighbours(x, y, nodeArr){
 
 function smallestDist(dist, nodeArr){
     let smallest = nodeArr[0]
-    for (let i=0; i< nodeArr.length; i++){
+    for (let i=1; i< nodeArr.length; i++){
         if (dist[nodeArr[i]] < dist[smallest]){
             smallest = nodeArr[i]
         }
@@ -93,6 +93,6 @@ export {find,
         startingNodeGraph,
         startingWeightGraph,
         randomizeWeights,
-        Neighbours,
+        findNeighbours,
         heuristic,
         smallestDist}

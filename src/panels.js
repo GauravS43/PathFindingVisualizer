@@ -60,7 +60,8 @@ function AlgorithmsDropDown({setFuncIndex}){
             <div className="dropdown_content" style={{display: algorithmsClicked ? "" : "none"}}> 
                 <h3 onClick={() => changeAlgorithm(0)}>Dijkstra</h3>
                 <h3 onClick={() => changeAlgorithm(1)}>A Star</h3>
-
+                <h3 onClick={() => changeAlgorithm(2)}>Depth First</h3>
+                <h3 onClick={() => changeAlgorithm(3)}>Breadth First</h3>
             </div>
         </div>
     )
@@ -72,7 +73,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
     const [visiblePanel, setVisiblePanel] = React.useState(true)
-    const funcNameArr = ["Dijkstra", "A Star"]
+    const funcNameArr = ["Dijkstra", "A Star", "Depth First", "Breadth First"]
 
     function findP(){
         updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
@@ -94,7 +95,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
     )
 }
 
-function AdvancedPanel({animating, seeWeights, setSeeWeights}){
+function AdvancedPanel({animating, seeWeights, setSeeWeights, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph = React.useContext(NodeGraphContext)[1]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
@@ -108,9 +109,18 @@ function AdvancedPanel({animating, seeWeights, setSeeWeights}){
 
     function randomizeW(){
         if (!animating){
+            setPathFound(false)
             updateWeightGraph(randomizeWeights())
             updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         }
+    }
+
+    function defaultW(){
+        if (!animating){
+            setPathFound(false)
+            updateWeightGraph(startingWeightGraph())
+            updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
+        } 
     }
 
     return (
@@ -128,7 +138,9 @@ function AdvancedPanel({animating, seeWeights, setSeeWeights}){
             <button className={animating ? "clear_button" : ""} onClick={randomizeW}>
                 Randomize Weights
             </button>
-
+            <button className={animating ? "clear_button" : ""} onClick={defaultW}> 
+                Default Weights 
+            </button>
         </div>
     )
 }
