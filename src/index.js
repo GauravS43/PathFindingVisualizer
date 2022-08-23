@@ -9,8 +9,7 @@ import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 import {SidePanel, AdvancedPanel} from "./panels"
 import {Grid} from "./grid"
 
-function App()
-{
+function App(){
     const [nodeGraph, setNodeGraph] = React.useState(startingNodeGraph())
     const [weightGraph, setWeightGraph] = React.useState(startingWeightGraph())
     
@@ -22,15 +21,18 @@ function App()
     const [cost, setCost] = React.useState(0)
 
     const [funcIndex, setFuncIndex] = React.useState(0)
-    const funcArr = [() => updated_dijkstra_aStar(nodeGraph, weightGraph, [5,6], false),
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [5,6], true),
-                     () => depthFirst(nodeGraph, weightGraph, [5,6]),
-                     () => breadthFirst(nodeGraph, weightGraph, [5,6]),
+    const funcArr = [() => updated_dijkstra_aStar(nodeGraph, weightGraph, [5, 6], false),
+                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [5, 6], true),
+                     () => depthFirst(nodeGraph, weightGraph, [5, 6]),
+                     () => breadthFirst(nodeGraph, weightGraph, [5, 6]),
+                     () => greedyBestFirst(nodeGraph, weightGraph, [5, 6]),
 
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3,4], false),
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3,4], true),
-                     () => depthFirst(nodeGraph, weightGraph, [3,4]),
-                     () => breadthFirst(nodeGraph, weightGraph, [3,4]),]
+                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3, 4], false),
+                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3, 4], true),
+                     () => depthFirst(nodeGraph, weightGraph, [3, 4]),
+                     () => breadthFirst(nodeGraph, weightGraph, [3, 4]),
+                     () => greedyBestFirst(nodeGraph, weightGraph, [3, 4])
+                    ]
                          
     function updateWeightGraph(newGraph){
         setWeightGraph(newGraph)
@@ -49,7 +51,7 @@ function App()
         if (pathFound){
             setNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
             let pfResults = []
-            setTimeout(function() {pfResults = funcArr[funcIndex + 4]()}, 1)
+            setTimeout(function() {pfResults = funcArr[funcIndex + 5]()}, 1)
             setTimeout(() => setNodeGraph(pfResults[0]), 1)
             setTimeout(() => setCost(pfResults[2]), 1)
             setTimeout(() => setChanged(prevState => prevState + 1), 1)
@@ -64,21 +66,12 @@ function App()
         setChanged(prevState => prevState + 1)
     }
 
-    function GBS(){
-        let [newGraph, order, newCost] =  greedyBestFirst(nodeGraph, weightGraph, [5, 6])
-        updateScreen(true, order, setPathFound, setAnimating)
-        setNodeGraph(newGraph)
-        setCost(newCost)
-        setChanged(prevState => prevState + 1)
-    }
-
     return(
         <div className="wrapper">
             <NodeGraphContext.Provider value={[nodeGraph, updateNodeGraph, manipulateNodeGraph]}>
                 <WeightGraphContext.Provider value={[weightGraph, updateWeightGraph]}>
                     <p className="debug">{changed}</p>
-                    <button onClick={GBS}>TEST</button>
-                    <h3 className="cost" onClick={() => console.log(nodeGraph)}>Total Cost: {cost}</h3>
+                    <h3 className="cost">Total Cost: {cost}</h3>
 
                     <Grid findPath={findPath} seeWeights={seeWeights}/>
                     <SidePanel findPath= {findPath} funcIndex={funcIndex} setFuncIndex={setFuncIndex} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>

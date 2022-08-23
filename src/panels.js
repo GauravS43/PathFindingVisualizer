@@ -62,6 +62,7 @@ function AlgorithmsDropDown({setFuncIndex}){
                 <h3 onClick={() => changeAlgorithm(1)}>A Star</h3>
                 <h3 onClick={() => changeAlgorithm(2)}>Depth First</h3>
                 <h3 onClick={() => changeAlgorithm(3)}>Breadth First</h3>
+                <h3 onClick={() => changeAlgorithm(4)}>Greedy Best First</h3>
             </div>
         </div>
     )
@@ -73,7 +74,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
     const [visiblePanel, setVisiblePanel] = React.useState(true)
-    const funcNameArr = ["Dijkstra", "A Star", "Depth First", "Breadth First"]
+    const funcNameArr = ["Dijkstra", "A Star", "Depth First", "Breadth First", "Greedy Best First"]
 
     function findP(){
         updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))

@@ -27,7 +27,7 @@ h2{
     margin-bottom: 6%;
     color: white;
     font-family: 'Nunito', sans-serif;
-    font-size: 1.3vw;
+    font-size: 1.5vw;
     text-align: center;
 }
 
@@ -57,7 +57,7 @@ button:hover{
     background-color: white;
 }
 
-/*Side Panels*/
+/*-----------SidePanel-----------*/
 
 .panel_container{
     position: absolute;
@@ -69,6 +69,10 @@ button:hover{
     background-color: #FA5A00;
     top: 27%;
     left: 2%;
+}
+
+.panel_container h2{
+    font-size: 1.1vw;
 }
 
 .arrows{
