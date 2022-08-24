@@ -12,23 +12,6 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
     let symbol = ["", "", "A", "B", "", ""][state + 1]
     let color = ["#96ADE9", "white", "#19D719", "#F02D7D", "#7E05FF", "#FBFF00", "", ""][state + 1]
 
-    /*
-    function handleCLick(){
-        let nodeArr = []
-
-        for (let y = 0; y < nodeGraph.length; y++){
-            for (let x = 0; x < nodeGraph[y].length; x++){
-                if (nodeGraph[y][x] !== -1) {
-                    let coords = `${x},${y}`
-                    nodeArr.push(coords)
-                }
-            }
-        }
-        console.log(`Node: ${x},${y}`)
-        console.log(`Neighbours: ${Neighbours(x, y, nodeArr)}`)
-    }*/
-
-
     function handleEnter(){
         if (mouseState && (nodeGraph[y][x] < 1 | nodeGraph[y][x] > 2)){
             manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
@@ -36,9 +19,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
     }
 
     function handleLeave(){
-        if (reservedState !== nodeGraph[y][x]){
-            return
-        }
+        if (reservedState !== nodeGraph[y][x]) return
 
         if (mouseState && reservedState > 0){
             manipulateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})
@@ -50,7 +31,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
             setReservedState(state)
         }
         else if (state === -1){
-            manipulateNodeGraph(prevState => {prevState[y][x] = 0 ; return prevState})
+            manipulateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})
         }
         else{
             manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
@@ -63,7 +44,6 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
             onMouseEnter= {handleEnter}
             onMouseLeave= {handleLeave}
             onMouseDown={handleDown}
-            //onClick={handleCLick}
             key={[x, y]} 
             id={[x, y]}
             style={{backgroundColor: color}}

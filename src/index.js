@@ -19,6 +19,8 @@ function App(){
 
     const [changed, setChanged] = React.useState(0)
     const [cost, setCost] = React.useState(0)
+    const [errorMSG, setErrorMSG] = React.useState("")
+    const errorStyle = {display: errorMSG ? "block" : "none"}
 
     const [funcIndex, setFuncIndex] = React.useState(0)
     const funcArr = [() => updated_dijkstra_aStar(nodeGraph, weightGraph, [5, 6], false),
@@ -39,8 +41,24 @@ function App(){
         setChanged(prevState => prevState + 1)
     }
 
+    function handleError(newCost){
+        if (newCost !== -1) {
+            setErrorMSG("")
+            setCost(newCost)
+        } else {
+            setErrorMSG("No Path Found")
+        } 
+    }
+
     function updateNodeGraph(newGraph){
         setNodeGraph(newGraph)
+        if (!find(newGraph, 1)){
+            setErrorMSG("Error: No Start")
+        } else if (!find(newGraph, 2)){
+            setErrorMSG("Error: No End")
+        } else {
+            setErrorMSG("")
+        }
         if (!find(newGraph, 4)) setCost(0)
         setChanged(prevState => prevState + 1)
     }
@@ -53,7 +71,7 @@ function App(){
             let pfResults = []
             setTimeout(function() {pfResults = funcArr[funcIndex + 5]()}, 1)
             setTimeout(() => setNodeGraph(pfResults[0]), 1)
-            setTimeout(() => setCost(pfResults[2]), 1)
+            setTimeout(() => handleError(pfResults[2]), 1)
             setTimeout(() => setChanged(prevState => prevState + 1), 1)
         }
     }
@@ -62,7 +80,7 @@ function App(){
         let [newGraph, order, newCost] =  funcArr[funcIndex]()
         updateScreen(animate, order, setPathFound, setAnimating)
         setNodeGraph(newGraph)
-        setCost(newCost)
+        handleError(newCost)
         setChanged(prevState => prevState + 1)
     }
 
@@ -72,6 +90,8 @@ function App(){
                 <WeightGraphContext.Provider value={[weightGraph, updateWeightGraph]}>
                     <p className="debug">{changed}</p>
                     <h3 className="cost">Total Cost: {cost}</h3>
+                    <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
+
 
                     <Grid findPath={findPath} seeWeights={seeWeights}/>
                     <SidePanel findPath= {findPath} funcIndex={funcIndex} setFuncIndex={setFuncIndex} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>

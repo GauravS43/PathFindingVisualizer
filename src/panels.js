@@ -82,7 +82,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
     }
 
     return (
-        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(100%)"}}>
+        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(101%)"}}>
             <div className="arrows">
                 <button onClick={() => setVisiblePanel(prevState => !prevState)}> 
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}

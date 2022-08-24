@@ -181,3 +181,14 @@ button:hover{
     padding: 1%;
     border-radius: 50px;
 }
+
+.error_msg{
+    font-family: 'Nunito', sans-serif;
+    position: absolute;
+    right: 0.5%;
+    top: 2.3%;
+    z-index: 1;
+    background-color: #ff9a9c;
+    padding: 1%;
+    border-radius: 50px;   
+}
