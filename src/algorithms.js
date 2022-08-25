@@ -48,6 +48,18 @@ function find(nodeGraph, target){
     }
 }
 
+function findNeighbours(x, y, nodeArr){
+    let neighbours = [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
+    neighbours = neighbours.map(coords => `${coords[0]},${coords[1]}`)
+    let results = []
+    for (let i = 0; i < 4; i++){
+        if (nodeArr.includes(neighbours[i])){
+            results.push(neighbours[i])
+        } 
+    }
+    return results
+}
+
 function clear(nodeGraph, statusArr){
     let newNodeGraph = nodeGraph
     for (let y = 0; y < nodeGraph.length; y++){
@@ -64,5 +76,6 @@ export {startingNodeGraph,
         startingWeightGraph,
         randomizeWeights,
         find,
+        findNeighbours,
         clear
     }

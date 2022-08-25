@@ -3,11 +3,12 @@ import ReactDOM from "react-dom"
 import './index.css'
 
 import {clear, find, startingNodeGraph, startingWeightGraph} from "./algorithms"
-import {breadthFirst, depthFirst, greedyBestFirst, updated_dijkstra_aStar, updateScreen} from "./pfAlgorithms"
+import {breadthFirst, depthFirst, greedyBestFirst, updated_dijkstra_aStar, updateScreen} from "./pathFinding"
 
 import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 import {SidePanel, AdvancedPanel} from "./panels"
 import {Grid} from "./grid"
+import { auxDivide } from "./mazeGeneration"
 
 function App(){
     const [nodeGraph, setNodeGraph] = React.useState(startingNodeGraph())
@@ -84,11 +85,18 @@ function App(){
         setChanged(prevState => prevState + 1)
     }
 
+    function generateMaze(){
+        let newGraph = auxDivide(nodeGraph)
+        setNodeGraph(newGraph)
+        setChanged(prevState => prevState + 1)
+    }
+
     return(
         <div className="wrapper">
             <NodeGraphContext.Provider value={[nodeGraph, updateNodeGraph, manipulateNodeGraph]}>
                 <WeightGraphContext.Provider value={[weightGraph, updateWeightGraph]}>
                     <p className="debug">{changed}</p>
+                    <button onClick={generateMaze}>TEST</button>
                     <h3 className="cost">Total Cost: {cost}</h3>
                     <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
 

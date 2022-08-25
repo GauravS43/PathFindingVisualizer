@@ -1,4 +1,4 @@
-import {find} from "./algorithms"
+import {find, findNeighbours} from "./algorithms"
 
 function updateScreen(animate, order, setPathFound, setAnimating){
     setAnimating(true)
@@ -19,18 +19,6 @@ function updateScreen(animate, order, setPathFound, setAnimating){
 }
 
 /*---------------- AUXILIARY FUNCTIONS ----------------*/
-
-function findNeighbours(x, y, nodeArr){
-    let neighbours = [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
-    neighbours = neighbours.map(coords => `${coords[0]},${coords[1]}`)
-    let results = []
-    for (let i = 0; i < 4; i++){
-        if (nodeArr.includes(neighbours[i])){
-            results.push(neighbours[i])
-        } 
-    }
-    return results
-}
 
 function smallestDist(dist, nodeArr){
     let smallest = nodeArr[0]
@@ -280,4 +268,8 @@ function greedyBestFirst(nodeGraph, weightGraph, stateArr){
     return [newNodeGraph, animateOrder, -1]
 }
 
-export {updated_dijkstra_aStar, depthFirst, breadthFirst, updateScreen, greedyBestFirst}
+export {updated_dijkstra_aStar,
+        depthFirst, 
+        breadthFirst,
+        updateScreen,
+        greedyBestFirst}

@@ -2,7 +2,7 @@ import React from "react"
 import {NodeGraphContext, WeightGraphContext} from "./graphContext"
 
 
-function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
+function Node({x, y, reservedState, setReservedState, enteredState, setEnteredState, mouseState, seeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
     const weightGraph = React.useContext(WeightGraphContext)[0]
@@ -14,6 +14,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
 
     function handleEnter(){
         if (mouseState && (nodeGraph[y][x] < 1 | nodeGraph[y][x] > 2)){
+            setEnteredState(nodeGraph[y][x])
             manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
@@ -22,7 +23,8 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
         if (reservedState !== nodeGraph[y][x]) return
 
         if (mouseState && reservedState > 0){
-            manipulateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})
+            manipulateNodeGraph(prevState => {prevState[y][x] = enteredState; return prevState})
+            setEnteredState(0)
         }
     }
 
@@ -56,6 +58,7 @@ function Node({x, y, reservedState, setReservedState, mouseState, seeWeights}){
 
 export function Grid({findPath, seeWeights}){
     const [reservedState, setReservedState] = React.useState(-1)
+    const [enteredState, setEnteredState] = React.useState(0)
     const [mouseState, setMouseState] = React.useState(false)
     let row = []
 
@@ -76,6 +79,8 @@ export function Grid({findPath, seeWeights}){
                     x={x} y={y} 
                     reservedState={reservedState} 
                     setReservedState={setReservedState} 
+                    enteredState={enteredState}
+                    setEnteredState={setEnteredState}
                     mouseState={mouseState} 
                     seeWeights={seeWeights}
                 />
