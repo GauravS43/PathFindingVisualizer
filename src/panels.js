@@ -9,8 +9,8 @@ function ClearButtons({animating, pathFound, setPathFound}){
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
 
     function clearWalls(){
-        if (find(nodeGraph, -1) && !animating){
-            manipulateNodeGraph(clear(nodeGraph, [-1]))
+        if (!animating && (find(nodeGraph, -1) || find(nodeGraph, 7))){
+            manipulateNodeGraph(clear(nodeGraph, [-1, 7]))
         }
     }
 
@@ -31,7 +31,7 @@ function ClearButtons({animating, pathFound, setPathFound}){
 
     return(
         <div>
-            <button className={find(nodeGraph, -1) ? "" : "clear_button"} onClick={clearWalls}>
+            <button className={(!animating && (find(nodeGraph, -1) || find(nodeGraph, 7))) ? "" : "clear_button"} onClick={clearWalls}>
                 Clear Walls
             </button>
             <button className={pathFound ? "" : "clear_button"} onClick={clearPaths}>
@@ -96,7 +96,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
     )
 }
 
-function AdvancedPanel({animating, seeWeights, setSeeWeights, setPathFound}){
+function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph = React.useContext(NodeGraphContext)[1]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
@@ -137,10 +137,18 @@ function AdvancedPanel({animating, seeWeights, setSeeWeights, setPathFound}){
                 {seeWeights ? "Hide Weights" : "View Weights"}
             </button>
             <button className={animating ? "clear_button" : ""} onClick={randomizeW}>
-                Randomize Weights
+                Random Weights
             </button>
             <button className={animating ? "clear_button" : ""} onClick={defaultW}> 
                 Default Weights 
+            </button>
+
+            <button onClick={generateMaze}>
+                Generate Maze
+            </button>
+
+            <button>
+                Algorithms &#8964;
             </button>
         </div>
     )

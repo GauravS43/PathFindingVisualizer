@@ -86,7 +86,7 @@ function divide(nodeArr, animateOrder, xRange, yRange, passArr){
 
 
 function auxDivide(nodeGraph){
-    let animateOrder = []
+    let animateOrder = [[], []]
     let newNodeGraph = nodeGraph
     let nodeArr = []
     let passArr = []
@@ -99,12 +99,12 @@ function auxDivide(nodeGraph){
     }
 
     for (let x= 0; x < 41; x++){
-        animateOrder.push([x, 0])
-        animateOrder.push([x, 21])
+        animateOrder[0].push([x, 0])
+        animateOrder[0].push([x, 21])
     }
     for (let y= 1; y < 21; y++){
-        animateOrder.push([0, y])
-        animateOrder.push([40, y])
+        animateOrder[0].push([0, y])
+        animateOrder[0].push([40, y])
     }
     let node = find(nodeGraph, 1)
     for (let i = 0; i < 2; i++){
@@ -116,15 +116,15 @@ function auxDivide(nodeGraph){
         node = find(nodeGraph, 2)
     }
 
-    divide(nodeArr, animateOrder, [0, 40], [0, 21], passArr)
+    divide(nodeArr, animateOrder[0], [0, 40], [0, 21], passArr)
 
-    for (let i = 0; i < animateOrder.length; i++){
-        let node = animateOrder[i]
-        newNodeGraph[node[1]][node[0]] = -1
-        //setTimeout(() => document.getElementById(`${node[0]},${node[1]}`).style.backgroundColor = "red", 1000 + i*80)
+    for (let i = 0; i < animateOrder[0].length; i++){
+        let node = animateOrder[0][i]
+        animateOrder[1].push(7)
+        newNodeGraph[node[1]][node[0]] = 7
     }
     
-    return newNodeGraph
+    return [newNodeGraph, animateOrder]
 }
 
 export {auxDivide}

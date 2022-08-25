@@ -86,9 +86,16 @@ function App(){
     }
 
     function generateMaze(){
-        let newGraph = auxDivide(nodeGraph)
-        setNodeGraph(newGraph)
+        setNodeGraph(clear(nodeGraph, [-1, 3, 4, 5, 6, 7]))
         setChanged(prevState => prevState + 1)
+        setTimeout(
+            function (){
+                let mazeResults = auxDivide(nodeGraph)
+                updateScreen(true, mazeResults[1], function(){}, setAnimating)
+                setNodeGraph(mazeResults[0])
+                setChanged(prevState => prevState + 1)
+            }, 1
+        )
     }
 
     return(
@@ -96,14 +103,13 @@ function App(){
             <NodeGraphContext.Provider value={[nodeGraph, updateNodeGraph, manipulateNodeGraph]}>
                 <WeightGraphContext.Provider value={[weightGraph, updateWeightGraph]}>
                     <p className="debug">{changed}</p>
-                    <button onClick={generateMaze}>TEST</button>
                     <h3 className="cost">Total Cost: {cost}</h3>
                     <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
 
 
                     <Grid findPath={findPath} seeWeights={seeWeights}/>
-                    <SidePanel findPath= {findPath} funcIndex={funcIndex} setFuncIndex={setFuncIndex} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
-                    <AdvancedPanel animating={animating} seeWeights={seeWeights} setSeeWeights={setSeeWeights} setPathFound={setPathFound}/>
+                    <SidePanel findPath={findPath} funcIndex={funcIndex} setFuncIndex={setFuncIndex} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
+                    <AdvancedPanel generateMaze={generateMaze} animating={animating} seeWeights={seeWeights} setSeeWeights={setSeeWeights} setPathFound={setPathFound}/>
                 </WeightGraphContext.Provider>
             </NodeGraphContext.Provider>
         </div>

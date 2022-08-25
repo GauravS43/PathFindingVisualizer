@@ -14,7 +14,9 @@ function Node({x, y, reservedState, setReservedState, enteredState, setEnteredSt
 
     function handleEnter(){
         if (mouseState && (nodeGraph[y][x] < 1 | nodeGraph[y][x] > 2)){
-            setEnteredState(nodeGraph[y][x])
+            if (nodeGraph[y][x] === -1 || nodeGraph[y][x] === 7){
+                setEnteredState(-1)
+            }
             manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
@@ -32,7 +34,7 @@ function Node({x, y, reservedState, setReservedState, enteredState, setEnteredSt
         if (state === 1 || state === 2 ){
             setReservedState(state)
         }
-        else if (state === -1){
+        else if (state === -1 || state === 7){
             manipulateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})
         }
         else{

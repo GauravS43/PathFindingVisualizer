@@ -2,7 +2,7 @@ import {find, findNeighbours} from "./algorithms"
 
 function updateScreen(animate, order, setPathFound, setAnimating){
     setAnimating(true)
-    let color = ["#7E05FF", "#FBFF00"]
+    let color = ["#7E05FF", "#FBFF00", "#96ADE9"]
 
     for (let i = 0; i < order[0].length; i++){
         let delay = animate ? i : 0
@@ -60,7 +60,7 @@ function initializeStructures(nodeGraph, numOfDicts, dictValues){
 
     for (let y = 0; y < nodeGraph.length; y++){
         for (let x = 0; x < nodeGraph[y].length; x++){
-            if (nodeGraph[y][x] !== -1) {
+            if (nodeGraph[y][x] !== -1 && nodeGraph[y][x] !== 7) {
                 let coords = `${x},${y}`
                 nodeArr.push(coords)
                 for (let i = 0; i < numOfDicts; i++){

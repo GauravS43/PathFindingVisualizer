@@ -5,13 +5,14 @@ const WeightGraphContext = React.createContext()
 
 //NODE STATUS:
 //-1 = wall
-//0 = nothing
-//1 = start
-//2 = end
-//3 = viewed
-//4 = path
-//5 = animated viewed
-//6 = animated path
+// 0 = nothing
+// 1 = start
+// 2 = end
+// 3 = viewed
+// 4 = path
+// 5 = animated viewed
+// 6 = animated path
+// 7 = animated wall
 
 //TODO
 //Add error messages if start or end node doesn't exist or if path is impossible
