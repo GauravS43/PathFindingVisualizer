@@ -40,9 +40,8 @@ function getRandom(min, max){
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-
 function divide(nodeArr, animateOrder, xRange, yRange, passArr){
-    //includes two walls
+    //includes walls on left and right
     let width = 1 + (xRange[1] - xRange[0])
     let height = 1 + (yRange[1] - yRange[0])
 
@@ -55,7 +54,8 @@ function divide(nodeArr, animateOrder, xRange, yRange, passArr){
         let randPass = getRandom(yRange[0] + 1, yRange[1] - 1)
 
         for (let y = yRange[0] + 1; y < yRange[1]; y++){
-            if (passArr.includes(`${x},${y}`)) continue
+            //skips if wall is next to a pass
+            if (passArr.includes(`${x},${y}`)) continue 
             if (y !== randPass) animateOrder.push([x, y])
         }
 
@@ -70,6 +70,7 @@ function divide(nodeArr, animateOrder, xRange, yRange, passArr){
         let randPass = getRandom(xRange[0] + 1, xRange[1] - 1)
 
         for (let x = xRange[0] + 1; x < xRange[1]; x++){
+            //skips if wall is next to a pass
             if (passArr.includes(`${x},${y}`)) continue
             if (x !== randPass) animateOrder.push([x, y])
         }
@@ -82,8 +83,6 @@ function divide(nodeArr, animateOrder, xRange, yRange, passArr){
         divide(nodeArr, animateOrder, xRange, [y, yRange[1]], passArr)
     }
 }
-
-
 
 function auxDivide(nodeGraph){
     let animateOrder = [[], []]
@@ -98,6 +97,7 @@ function auxDivide(nodeGraph){
         }
     }
 
+    //makes border walls
     for (let x= 0; x < 41; x++){
         animateOrder[0].push([x, 0])
         animateOrder[0].push([x, 21])
@@ -106,6 +106,8 @@ function auxDivide(nodeGraph){
         animateOrder[0].push([0, y])
         animateOrder[0].push([40, y])
     }
+
+    //prevents walls from surrounding start and end nodes
     let node = find(nodeGraph, 1)
     for (let i = 0; i < 2; i++){
         passArr.push(node)

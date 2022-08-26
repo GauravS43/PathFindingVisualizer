@@ -1,45 +1,43 @@
 import React from "react"
-import {NodeGraphContext, WeightGraphContext} from "./graphContext"
+import { NodeGraphContext, WeightGraphContext } from "./graphContext"
 
 
-function Node({x, y, reservedState, setReservedState, enteredState, setEnteredState, mouseState, seeWeights}){
+function Node({x, y, reservedState, setReservedState, enteredState, setEnteredState, mouseDown, seeWeights}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
     const weightGraph = React.useContext(WeightGraphContext)[0]
 
     let weight = weightGraph[y][x]
     let state = nodeGraph[y][x]
-    let symbol = ["", "", "A", "B", "", ""][state + 1]
-    let color = ["#96ADE9", "white", "#19D719", "#F02D7D", "#7E05FF", "#FBFF00", "", ""][state + 1]
+    let symbol = ([1, 2].includes(state) ? ["A", "B"][state - 1] : "")
+    //other states are given colour through an auxiliary function 
+    let color = (state < 5 ? ["#96ADE9", "#FFFFFF", "#19D719", "#F02D7D", "#7E05FF", "#FBFF00"][state + 1] : "")
 
     function handleEnter(){
-        if (mouseState && (nodeGraph[y][x] < 1 | nodeGraph[y][x] > 2)){
-            if (nodeGraph[y][x] === -1 || nodeGraph[y][x] === 7){
-                setEnteredState(-1)
-            }
+        if (mouseDown && ![1, 2].includes(state)){
+            //preserves state when exiting 
+            if ([-1, 7].includes(state)) setEnteredState(-1)
             manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }
     }
 
     function handleLeave(){
-        if (reservedState !== nodeGraph[y][x]) return
+        //preserves both start and end nodes after dragging one over the other
+        if (reservedState !== state) return
 
-        if (mouseState && reservedState > 0){
+        if (mouseDown && reservedState > 0){
             manipulateNodeGraph(prevState => {prevState[y][x] = enteredState; return prevState})
             setEnteredState(0)
         }
     }
 
     function handleDown(){
-        if (state === 1 || state === 2 ){
-            setReservedState(state)
-        }
-        else if (state === -1 || state === 7){
-            manipulateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})
-        }
-        else{
-            manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
-        }
+        if ([1, 2].includes(state)) 
+            {setReservedState(state)}
+        else if ([-1, 7].includes(state))
+            {manipulateNodeGraph(prevState => {prevState[y][x] = 0; return prevState})}
+        else
+            {manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})}
     }
 
     return(
@@ -58,20 +56,23 @@ function Node({x, y, reservedState, setReservedState, enteredState, setEnteredSt
     )
 }
 
-export function Grid({findPath, seeWeights}){
+export function Grid({seeWeights}){
+    //stores state that will be set when mouseDown
     const [reservedState, setReservedState] = React.useState(-1)
+    //stores old state that reservedState overwrites
     const [enteredState, setEnteredState] = React.useState(0)
-    const [mouseState, setMouseState] = React.useState(false)
-    let row = []
+    const [mouseDown, setMouseDown] = React.useState(false)
 
     document.body.onmousedown = function() { 
-        setMouseState(true)
+        setMouseDown(true)
     }
 
     document.body.onmouseup = function() {
-        setMouseState(false)
+        setMouseDown(false)
         setReservedState(-1)
     }
+
+    let row = []
 
     for (let y = 0; y < 22; y++){
         for (let x = 0; x < 41; x++){
@@ -83,7 +84,7 @@ export function Grid({findPath, seeWeights}){
                     setReservedState={setReservedState} 
                     enteredState={enteredState}
                     setEnteredState={setEnteredState}
-                    mouseState={mouseState} 
+                    mouseDown={mouseDown} 
                     seeWeights={seeWeights}
                 />
             )

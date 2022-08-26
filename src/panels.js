@@ -1,6 +1,6 @@
 import React from "react"
-import {clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights} from "./algorithms"
-import {NodeGraphContext, WeightGraphContext} from "./graphContext"
+import { clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights } from "./algorithms"
+import { NodeGraphContext, WeightGraphContext } from "./graphContext"
 
 function ClearButtons({animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
@@ -68,7 +68,6 @@ function AlgorithmsDropDown({setFuncIndex}){
     )
 }
 
-
 function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
@@ -78,11 +77,11 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
 
     function findP(){
         updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
-        setTimeout(() => findPath(true), 1)
+        setTimeout(() => findPath(), 1)
     }
 
     return (
-        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(101%)"}}>
+        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(94%)"}}>
             <div className="arrows">
                 <button onClick={() => setVisiblePanel(prevState => !prevState)}> 
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
@@ -103,11 +102,12 @@ function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setP
     const [visiblePanel, setVisiblePanel] = React.useState(false)
 
     const style = {
-        transform: visiblePanel ? "translateY(0)" : "translateY(108%)",
+        transform: visiblePanel ? "translateY(0)" : "translateY(100%)",
         backgroundColor: "#2851F6",
         left: "78%"
     }
 
+    //nodeGraph is cleared after weights change because old path may not be optimal
     function randomizeW(){
         if (!animating){
             setPathFound(false)

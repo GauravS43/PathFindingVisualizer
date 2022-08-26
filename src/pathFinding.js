@@ -1,21 +1,20 @@
-import {find, findNeighbours} from "./algorithms"
+import { find, findNeighbours } from "./algorithms"
 
-function updateScreen(animate, order, setPathFound, setAnimating){
+//auxiliary function used to change background color for statuses 5,6,7
+function updateScreen(order, setPathFound, setAnimating){
     setAnimating(true)
     let color = ["#7E05FF", "#FBFF00", "#96ADE9"]
 
     for (let i = 0; i < order[0].length; i++){
-        let delay = animate ? i : 0
-        setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 5], delay * 8)
+        setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 5], i * 8)
     }
     
-    if (animate){
-        setTimeout(() => setPathFound(true), (order[0].length - 1) * 8)
-        setTimeout(() => setAnimating(false), (order[0].length - 1) * 8)
-    } else {
-        setPathFound(true)
-        setAnimating(false)
-    }
+    setTimeout(
+        function(){
+            setPathFound(true)
+            setAnimating(false)
+        }, (order[0].length - 1) * 8
+    )
 }
 
 /*---------------- AUXILIARY FUNCTIONS ----------------*/
@@ -130,6 +129,7 @@ function updated_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
         for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
             let [nX, nY] = neighbour.split(',')
             let tempDist = dist[node] + weightGraph[parseInt(nY)][parseInt(nX)]
+            //A Star algorithm includes heuristic, dijkstra does not
             if (useHeuristic) tempDist += heuristic(neighbour, end)
 
             if (tempDist < dist[neighbour] && dist[node] !== Infinity){
@@ -150,6 +150,7 @@ function depthFirst(nodeGraph, weightGraph, stateArr){
     let queue = [start]
 
     while (queue.length !== 0){
+        //.shift() would make breadthFirst
         let node = queue.pop() 
         let [x, y] = node.split(',')
 
@@ -191,12 +192,12 @@ function breadthFirst(nodeGraph, weightGraph, stateArr){
     let queue = [start]
 
     while (queue.length !== 0){
+        //.pop() would make depthFirst
         let node = queue.shift() 
         let [x, y] = node.split(',')
 
         for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
             if (visited[neighbour]) prev[node] = neighbour
-            if (neighbour === start) prev[node] = neighbour
         }
 
         if (node === end){
