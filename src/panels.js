@@ -88,18 +88,46 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
                 </button>
             </div>
             <button className="first_button" onClick={findP}>Run</button>
-            <h2>Current Algorithm: {funcNameArr[funcIndex]}</h2>
+            <h2>Algorithm: {funcNameArr[funcIndex]}</h2>
             <AlgorithmsDropDown setFuncIndex={setFuncIndex}/>
             <ClearButtons animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
         </div>
     )
 }
 
-function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setPathFound}){
+function MazeDropDown({setMazeIndex}){
+    const [algorithmsClicked, setAlgorithmsClicked] = React.useState(false)
+
+    function changeAlgorithm(ind){
+        setMazeIndex(ind)
+        setAlgorithmsClicked(false)
+    }
+
+    const contentStyle = {
+        display: algorithmsClicked ? "" : "none",
+        backgroundColor: "#a9b9fb",
+    }
+
+    return(
+        <div className="dropdown">
+            <button onClick={() => setAlgorithmsClicked(prevState => !prevState)}>
+                Algorithms &#8964;
+            </button>
+            <div className="dropdown_content" style={contentStyle}> 
+                <h3 onClick={() => changeAlgorithm(0)}>Recursive Division (R.D)</h3>
+                <h3 onClick={() => changeAlgorithm(1)}>R.D Horizontal Bias</h3>
+                <h3 onClick={() => changeAlgorithm(2)}>R.D Vertical Bias</h3>
+            </div>
+        </div>
+    )
+}
+
+function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setPathFound, mazeIndex, setMazeIndex}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph = React.useContext(NodeGraphContext)[1]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
     const [visiblePanel, setVisiblePanel] = React.useState(false)
+    const mazeNameArr = ["Recursive Division", "R.D Horizontal Bias", "R.D Vertical Bias"]
 
     const style = {
         transform: visiblePanel ? "translateY(0)" : "translateY(100%)",
@@ -133,22 +161,22 @@ function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setP
             </div>
 
             <h1>Advanced</h1>
+
             <button onClick={() => setSeeWeights(prevState => !prevState)}>
                 {seeWeights ? "Hide Weights" : "View Weights"}
             </button>
+
+            <button style={{marginBottom: "1%"}} className={animating ? "clear_button" : ""} onClick={generateMaze}>
+                Generate Maze
+            </button>
+            <h2>Algorithm: {mazeNameArr[mazeIndex]}</h2>
+            <MazeDropDown setMazeIndex={setMazeIndex}/>
+
             <button className={animating ? "clear_button" : ""} onClick={randomizeW}>
                 Random Weights
             </button>
             <button className={animating ? "clear_button" : ""} onClick={defaultW}> 
                 Default Weights 
-            </button>
-
-            <button onClick={generateMaze}>
-                Generate Maze
-            </button>
-
-            <button>
-                Algorithms &#8964;
             </button>
         </div>
     )

@@ -13,8 +13,8 @@
 }
 
 h1{
-    width: 92%;
-    margin: 2%;
+    width: 100%;
+    margin: 0;
     color: white;
     font-family: 'Nunito', sans-serif;
     font-size: 3.5vw;
@@ -73,7 +73,7 @@ button:hover{
 }
 
 .panel_container h2{
-    font-size: 1.1vw;
+    font-size: 1.3vw;
 }
 
 .arrows{

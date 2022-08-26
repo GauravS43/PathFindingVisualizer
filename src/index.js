@@ -4,7 +4,7 @@ import './index.css'
 
 import { clear, startingNodeGraph, startingWeightGraph } from "./algorithms"
 import { breadthFirst, depthFirst, greedyBestFirst, updated_dijkstra_aStar, updateScreen } from "./pathFinding"
-import { auxDivide } from "./mazeGeneration"
+import { auxDivide, randomDFS } from "./mazeGeneration"
 
 import { NodeGraphContext, WeightGraphContext } from "./graphContext"
 import { SidePanel, AdvancedPanel } from "./panels"
@@ -39,6 +39,13 @@ function App(){
                      () => greedyBestFirst(nodeGraph, weightGraph, [3, 4])
                     ]
                          
+    const [mazeIndex, setMazeIndex] = React.useState(0)
+    const mazeArr = [() => auxDivide(nodeGraph, [1, 1]),
+                     () => auxDivide(nodeGraph, [1, 2]),
+                     () => auxDivide(nodeGraph, [2, 1]),
+                    ]
+
+
     function updateWeightGraph(newGraph){
         setWeightGraph(newGraph)
         setChanged(prevState => prevState + 1)
@@ -79,17 +86,24 @@ function App(){
     }
 
     function generateMaze(){
-        updateNodeGraph(clear(nodeGraph, [-1, 3, 4, 5, 6, 7]))
-        setPathFound(false)
-        //timeout necessary to ensure nodegraph is clear
-        setTimeout(
-            function(){
-                let mazeResults = auxDivide(nodeGraph)
-                //blank function as parameter to not change pathfound
-                updateScreen(mazeResults[1], () => {}, setAnimating)
-                updateNodeGraph(mazeResults[0])
-            }, 1
-        )
+        if (!animating){
+            updateNodeGraph(clear(nodeGraph, [-1, 3, 4, 5, 6, 7]))
+            setPathFound(false)
+            //timeout necessary to ensure nodegraph is clear
+            setTimeout(
+                function(){
+                    let mazeResults = mazeArr[mazeIndex]()
+                    //blank function as parameter to not change pathfound
+                    updateScreen(mazeResults[1], () => {}, setAnimating)
+                    updateNodeGraph(mazeResults[0])
+                }, 1
+            )
+        }
+    }
+
+    function testMaze(){
+        let mazeResults = randomDFS(nodeGraph)
+        updateNodeGraph(mazeResults)
     }
 
     return(
@@ -99,6 +113,7 @@ function App(){
                     <p className="debug">{changed}</p>
                     <h3 className="cost">Total Cost: {cost}</h3>
                     <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
+                    <button onClick={testMaze}> test </button>
                     
                     <Grid seeWeights={seeWeights}/>
                     
@@ -116,6 +131,8 @@ function App(){
                         seeWeights={seeWeights} 
                         setSeeWeights={setSeeWeights} 
                         setPathFound={setPathFound}
+                        mazeIndex={mazeIndex}
+                        setMazeIndex={setMazeIndex}
                     />
                 </WeightGraphContext.Provider>
             </NodeGraphContext.Provider>

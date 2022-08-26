@@ -1,6 +1,5 @@
 import { find, findNeighbours } from "./algorithms"
 
-/*
 function randomDFS(nodeGraph){
     let queue = ["0,0"]
     let nodeArr = []
@@ -17,7 +16,7 @@ function randomDFS(nodeGraph){
     let counter = 0
     while (queue){
         counter++
-        if (counter > 1000) break
+        if (counter > 2000) break
         let node = queue.shift()
         let [x, y] = node.split(',')
 
@@ -34,20 +33,21 @@ function randomDFS(nodeGraph){
     }
 
     return newNodeGraph
-}*/
+}
 
 function getRandom(min, max){
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function divide(nodeArr, animateOrder, xRange, yRange, passArr){
+function divide(nodeArr, animateOrder, xRange, yRange, passArr, bias){
     //includes walls on left and right
+    //more bias[0] = more vertical divides, more bias[1] is the opposite
     let width = 1 + (xRange[1] - xRange[0])
     let height = 1 + (yRange[1] - yRange[0])
 
     if (height < 5 || width < 5) return
 
-    let vertical = (width > height)
+    let vertical = (bias[0] * width > bias[1] * height)
 
     if (vertical){
         let x = getRandom(xRange[0] + 2, xRange[1] - 2)
@@ -63,8 +63,8 @@ function divide(nodeArr, animateOrder, xRange, yRange, passArr){
             passArr.push(n)
         }
 
-        divide(nodeArr, animateOrder, [xRange[0], x], yRange, passArr)
-        divide(nodeArr, animateOrder, [x, xRange[1]], yRange, passArr)
+        divide(nodeArr, animateOrder, [xRange[0], x], yRange, passArr, bias)
+        divide(nodeArr, animateOrder, [x, xRange[1]], yRange, passArr, bias)
     } else {
         let y = getRandom(yRange[0] + 2, yRange[1] - 2)
         let randPass = getRandom(xRange[0] + 1, xRange[1] - 1)
@@ -79,12 +79,12 @@ function divide(nodeArr, animateOrder, xRange, yRange, passArr){
             passArr.push(n)
         }
 
-        divide(nodeArr, animateOrder, xRange, [yRange[0], y], passArr)
-        divide(nodeArr, animateOrder, xRange, [y, yRange[1]], passArr)
+        divide(nodeArr, animateOrder, xRange, [yRange[0], y], passArr, bias)
+        divide(nodeArr, animateOrder, xRange, [y, yRange[1]], passArr, bias)
     }
 }
 
-function auxDivide(nodeGraph){
+function auxDivide(nodeGraph, bias){
     let animateOrder = [[], []]
     let newNodeGraph = nodeGraph
     let nodeArr = []
@@ -118,7 +118,7 @@ function auxDivide(nodeGraph){
         node = find(nodeGraph, 2)
     }
 
-    divide(nodeArr, animateOrder[0], [0, 40], [0, 21], passArr)
+    divide(nodeArr, animateOrder[0], [0, 40], [0, 21], passArr, bias)
 
     for (let i = 0; i < animateOrder[0].length; i++){
         let node = animateOrder[0][i]
@@ -129,4 +129,5 @@ function auxDivide(nodeGraph){
     return [newNodeGraph, animateOrder]
 }
 
-export {auxDivide}
+export {auxDivide,
+        randomDFS}
