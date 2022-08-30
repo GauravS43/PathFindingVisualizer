@@ -60,9 +60,11 @@ function AlgorithmsDropDown({setFuncIndex}){
             <div className="dropdown_content" style={{display: algorithmsClicked ? "" : "none"}}> 
                 <h3 onClick={() => changeAlgorithm(0)}>Dijkstra</h3>
                 <h3 onClick={() => changeAlgorithm(1)}>A Star</h3>
-                <h3 onClick={() => changeAlgorithm(2)}>Depth First</h3>
-                <h3 onClick={() => changeAlgorithm(3)}>Breadth First</h3>
-                <h3 onClick={() => changeAlgorithm(4)}>Greedy Best First</h3>
+                <h3 onClick={() => changeAlgorithm(2)}>Bidirectional Dijkstra</h3>
+                <h3 onClick={() => changeAlgorithm(3)}>Bidirectional A Star</h3>
+                <h3 onClick={() => changeAlgorithm(4)}>Depth First</h3>
+                <h3 onClick={() => changeAlgorithm(5)}>Breadth First</h3>
+                <h3 onClick={() => changeAlgorithm(6)}>Greedy Best First</h3>
             </div>
         </div>
     )
@@ -73,7 +75,14 @@ function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, 
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
     const [visiblePanel, setVisiblePanel] = React.useState(true)
-    const funcNameArr = ["Dijkstra", "A Star", "Depth First", "Breadth First", "Greedy Best First"]
+    const funcNameArr = ["Dijkstra",
+                         "A Star", 
+                         "Bidirectional Dijkstra", 
+                         "Bidirectional A Star",
+                         "Depth First", 
+                         "Breadth First", 
+                         "Greedy Best First"
+                        ]
 
     function findP(){
         updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
@@ -99,7 +108,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, 
             <div className="flex">
                 <h2>Speed:</h2>
                 <div className="slider_container">
-                    <input type="range" className="slider" min="2" max="16" id="speedSlider" onChange={updateSpeed}></input>
+                    <input type="range" className="slider" min="2" max="500" id="speedSlider" onChange={updateSpeed}></input>
                 </div>
             </div>
         </div>

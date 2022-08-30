@@ -3,8 +3,8 @@ import ReactDOM from "react-dom"
 import './index.css'
 
 import { clear, startingNodeGraph, startingWeightGraph } from "./algorithms/generalAlgo"
-import { breadthFirst, depthFirst, greedyBestFirst, updated_dijkstra_aStar, updateScreen } from "./algorithms/pathFinding"
-import { auxDivide, randomDFS } from "./algorithms/mazeGeneration"
+import { breadthFirst, depthFirst, greedyBestFirst, dijkstra_aStar, bidirectional_dijkstra_aStar, updateScreen } from "./algorithms/pathFinding"
+import { auxDivide } from "./algorithms/mazeGeneration"
 
 import { NodeGraphContext, WeightGraphContext } from "./graphContext"
 import { SidePanel, AdvancedPanel } from "./components/panels"
@@ -27,14 +27,18 @@ function App(){
     const [funcIndex, setFuncIndex] = React.useState(0)
     //first half of array needs auxiliary function to display change on render
     //later half of array automatically displays change on render
-    const funcArr = [() => updated_dijkstra_aStar(nodeGraph, weightGraph, [5, 6], false),
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [5, 6], true),
+    const funcArr = [() => dijkstra_aStar(nodeGraph, weightGraph, [5, 6], false),
+                     () => dijkstra_aStar(nodeGraph, weightGraph, [5, 6], true),
+                     () => bidirectional_dijkstra_aStar(nodeGraph, weightGraph, [5,6], false),
+                     () => bidirectional_dijkstra_aStar(nodeGraph, weightGraph, [5,6], true),
                      () => depthFirst(nodeGraph, weightGraph, [5, 6]),
                      () => breadthFirst(nodeGraph, weightGraph, [5, 6]),
                      () => greedyBestFirst(nodeGraph, weightGraph, [5, 6]),
 
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3, 4], false),
-                     () => updated_dijkstra_aStar(nodeGraph, weightGraph, [3, 4], true),
+                     () => dijkstra_aStar(nodeGraph, weightGraph, [3, 4], false),
+                     () => dijkstra_aStar(nodeGraph, weightGraph, [3, 4], true),
+                     () => bidirectional_dijkstra_aStar(nodeGraph, weightGraph, [3,4], false),
+                     () => bidirectional_dijkstra_aStar(nodeGraph, weightGraph, [3,4], true),
                      () => depthFirst(nodeGraph, weightGraph, [3, 4]),
                      () => breadthFirst(nodeGraph, weightGraph, [3, 4]),
                      () => greedyBestFirst(nodeGraph, weightGraph, [3, 4])
@@ -102,11 +106,6 @@ function App(){
         }
     }
 
-    function testMaze(){
-        let mazeResults = randomDFS(nodeGraph)
-        updateNodeGraph(mazeResults)
-    }
-
     return(
         <div className="wrapper">
             <NodeGraphContext.Provider value={[nodeGraph, updateNodeGraph, manipulateNodeGraph]}>
@@ -114,7 +113,6 @@ function App(){
                     <p className="debug">{changed}<br></br>{animateSpeed}</p>
                     <h3 className="cost">Total Cost: {cost}</h3>
                     <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
-                    <button onClick={testMaze}> test </button>
                     
                     <Grid seeWeights={seeWeights}/>
                     

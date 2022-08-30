@@ -94,7 +94,7 @@ function foundPath(weightGraph, prev, end){
 
 /*---------------- PATH FINDING ALGORITHMS ----------------*/
 
-function updated_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
+function dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
     let [start, end, animateOrder] = initializeVariables(nodeGraph) 
     let [nodeArr, [dist, prev]] = initializeStructures(nodeGraph, 2, [Infinity, undefined])
     let newNodeGraph = nodeGraph
@@ -137,6 +137,82 @@ function updated_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
                 prev[neighbour] = node
             }
         }
+    }
+    //only called if path not found
+    return [newNodeGraph, animateOrder, -1]
+}
+
+function bidirectional_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
+    let [start, end, animateOrder] = initializeVariables(nodeGraph) 
+    let [startingNodeArr, [distFromStart, distFromEnd, prev]] = initializeStructures(nodeGraph, 3, [Infinity, Infinity, undefined])
+    let newNodeGraph = nodeGraph
+    let endingNodeArr = [...startingNodeArr]
+
+    distFromStart[start] = 0
+    distFromEnd[end] = 0
+   
+
+    let distArr = [distFromStart, distFromEnd]
+    let nodeArrs = [startingNodeArr, endingNodeArr]
+    let arrInd = 0
+
+    while (startingNodeArr.length > 0){
+        let node = smallestDist(distArr[arrInd], nodeArrs[arrInd])
+        //All possible paths traversed
+        if (distArr[arrInd][node] === Infinity) break
+        let [x, y] = node.split(',')
+
+        if (node !== start && node !== end) {
+            animateOrder[0].push(node)
+            animateOrder[1].push(stateArr[0])
+            newNodeGraph[parseInt(y)][parseInt(x)] = stateArr[0]
+        }
+
+        nodeArrs[arrInd].splice(nodeArrs[arrInd].indexOf(node), 1)
+
+        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArrs[arrInd])){
+            //found connection between searches
+            if (startingNodeArr.includes(neighbour) !== endingNodeArr.includes(neighbour)){
+                let [cost, foundOrder] = foundPath(weightGraph, prev, node)
+                for (let i = 0; i < foundOrder.length; i++){
+                    let [pX, pY] = foundOrder[i].split(',')
+                    animateOrder[0].push(foundOrder[i])
+                    animateOrder[1].push(stateArr[1])
+                    newNodeGraph[parseInt(pY)][parseInt(pX)] = stateArr[1]
+                }
+                for (const n of findNeighbours(parseInt(x), parseInt(y), nodeArrs[(arrInd === 0) ? 1 : 0])){
+                    if (!nodeArrs[arrInd].includes(n)){
+                        let [X, Y] = n.split(',')
+                        let [addCost, addOrder] = foundPath(weightGraph, prev, n)
+                        for (let i = 0; i < addOrder.length; i++){
+                            let [pX, pY] = addOrder[i].split(',')
+                            animateOrder[0].push(addOrder[i])
+                            animateOrder[1].push(stateArr[1])
+                            newNodeGraph[parseInt(pY)][parseInt(pX)] = stateArr[1]
+                        }
+                        cost += addCost + 2
+                        animateOrder[0].push(n)
+                        animateOrder[1].push(stateArr[1])
+                        newNodeGraph[parseInt(Y)][parseInt(X)] = stateArr[1]
+                        animateOrder[0].push(node)
+                        animateOrder[1].push(stateArr[1])
+                        newNodeGraph[parseInt(y)][parseInt(x)] = stateArr[1]
+                    }
+                }
+                return [newNodeGraph, animateOrder, cost]
+            }
+
+            let [nX, nY] = neighbour.split(',')
+            let tempDist = distArr[arrInd][node] + weightGraph[parseInt(nY)][parseInt(nX)]
+            //A Star algorithm includes heuristic, dijkstra does not
+            if (useHeuristic) tempDist += heuristic(neighbour, (arrInd === 0) ? end : start)
+
+            if (tempDist < distArr[arrInd][neighbour] && distArr[arrInd][node] !== Infinity){
+                distArr[arrInd][neighbour] = tempDist
+                prev[neighbour] = node
+            }
+        }
+        arrInd = (arrInd === 0) ? 1 : 0
     }
     //only called if path not found
     return [newNodeGraph, animateOrder, -1]
@@ -269,8 +345,10 @@ function greedyBestFirst(nodeGraph, weightGraph, stateArr){
     return [newNodeGraph, animateOrder, -1]
 }
 
-export {updated_dijkstra_aStar,
+export {dijkstra_aStar,
+        bidirectional_dijkstra_aStar,
         depthFirst, 
         breadthFirst,
+        greedyBestFirst,
         updateScreen,
-        greedyBestFirst}
+    }
