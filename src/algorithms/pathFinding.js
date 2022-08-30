@@ -1,4 +1,4 @@
-import { find, findNeighbours } from "./algorithms"
+import { find, findNeighbours } from "./generalAlgo"
 
 //auxiliary function used to change background color for statuses 5,6,7
 function updateScreen(order, setPathFound, setAnimating, delay){

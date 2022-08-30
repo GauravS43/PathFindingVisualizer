@@ -2,13 +2,13 @@ import React from "react"
 import ReactDOM from "react-dom"
 import './index.css'
 
-import { clear, startingNodeGraph, startingWeightGraph } from "./algorithms"
-import { breadthFirst, depthFirst, greedyBestFirst, updated_dijkstra_aStar, updateScreen } from "./pathFinding"
-import { auxDivide, randomDFS } from "./mazeGeneration"
+import { clear, startingNodeGraph, startingWeightGraph } from "./algorithms/generalAlgo"
+import { breadthFirst, depthFirst, greedyBestFirst, updated_dijkstra_aStar, updateScreen } from "./algorithms/pathFinding"
+import { auxDivide, randomDFS } from "./algorithms/mazeGeneration"
 
 import { NodeGraphContext, WeightGraphContext } from "./graphContext"
-import { SidePanel, AdvancedPanel } from "./panels"
-import { Grid } from "./grid"
+import { SidePanel, AdvancedPanel } from "./components/panels"
+import { Grid } from "./components/grid"
 
 function App(){
     const [nodeGraph, setNodeGraph] = React.useState(startingNodeGraph())

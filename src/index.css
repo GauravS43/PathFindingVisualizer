@@ -65,7 +65,7 @@ button:hover{
 .panel_container{
     position: absolute;
     width: 20%;
-    height: 58%;
+    height: 32vw;
     opacity: 0.9;
     justify-content: center;
     border-radius: 20px;

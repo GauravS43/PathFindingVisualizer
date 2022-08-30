@@ -3,7 +3,7 @@ import React from "react"
 const NodeGraphContext = React.createContext()
 const WeightGraphContext = React.createContext()
 
-//NODE STATUS:
+//NODE GRAPH LEGEND:
 //-1 = wall
 // 0 = nothing
 // 1 = start

@@ -1,4 +1,4 @@
-import { find, findNeighbours } from "./algorithms"
+import { find, findNeighbours } from "./generalAlgo"
 
 function randomDFS(nodeGraph){
     let queue = ["0,0"]

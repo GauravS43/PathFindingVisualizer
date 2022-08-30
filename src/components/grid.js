@@ -1,5 +1,5 @@
 import React from "react"
-import { NodeGraphContext, WeightGraphContext } from "./graphContext"
+import { NodeGraphContext, WeightGraphContext } from "../graphContext"
 
 
 function Node({x, y, reservedState, setReservedState, enteredState, setEnteredState, mouseDown, seeWeights}){

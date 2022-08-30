@@ -1,6 +1,6 @@
 import React from "react"
-import { clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights } from "./algorithms"
-import { NodeGraphContext, WeightGraphContext } from "./graphContext"
+import { clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights } from "../algorithms/generalAlgo"
+import { NodeGraphContext, WeightGraphContext } from "../graphContext"
 
 function ClearButtons({animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
