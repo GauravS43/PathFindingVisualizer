@@ -1,19 +1,19 @@
 import { find, findNeighbours } from "./algorithms"
 
 //auxiliary function used to change background color for statuses 5,6,7
-function updateScreen(order, setPathFound, setAnimating){
+function updateScreen(order, setPathFound, setAnimating, delay){
     setAnimating(true)
     let color = ["#7E05FF", "#FBFF00", "#96ADE9"]
 
     for (let i = 0; i < order[0].length; i++){
-        setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 5], i * 8)
+        setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 5], i * delay)
     }
     
     setTimeout(
         function(){
             setPathFound(true)
             setAnimating(false)
-        }, (order[0].length - 1) * 8
+        }, (order[0].length - 1) * delay
     )
 }
 

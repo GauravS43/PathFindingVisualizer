@@ -46,6 +46,9 @@ button{
     transition: 0.2s ease;
 }
 
+.flex{
+    display: flex;
+  }
 
 .first_button{
     margin-bottom: 0%;
@@ -76,6 +79,14 @@ button:hover{
     font-size: 1.3vw;
 }
 
+.flex h2{
+    font-size: 1.5vw;
+    margin: 0;
+    margin-left: 10%;
+    width: 20%;
+    text-align: left;
+}
+
 .arrows{
     height: 10%;
 }
@@ -102,7 +113,7 @@ button:hover{
     width: 90%;
     text-align: center;
     z-index: 1;
-    margin-top: 2%;
+    margin-top: -3%;
     margin-left: 5%;
     border-radius: 15px;
     background-color: lightcoral;
@@ -193,3 +204,36 @@ button:hover{
     padding: 1%;
     border-radius: 50px;   
 }
+
+.slider_container{
+    width: 100%;
+}
+
+.slider{
+    margin-top: 6.5%;
+    -webkit-appearance: none;
+    width: 75%;
+    height: 5px;
+    margin-left: 10%;
+    direction: rtl;
+    background: #ae3e00;
+    border-radius: 20px;  
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; 
+    background: white;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+  }

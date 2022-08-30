@@ -17,6 +17,7 @@ function App(){
     const [seeWeights, setSeeWeights] = React.useState(false)
     const [pathFound, setPathFound] = React.useState(false)
     const [animating, setAnimating] = React.useState(false)
+    const [animateSpeed, setAnimateSpeed] = React.useState(16)
 
     const [cost, setCost] = React.useState(0)
     const [changed, setChanged] = React.useState(0)
@@ -80,7 +81,7 @@ function App(){
 
     function findPath(animate = true){
         let [newGraph, order, newCost] =  funcArr[(animate ? funcIndex : funcIndex + 5)]()
-        if (animate) updateScreen(order, setPathFound, setAnimating)
+        if (animate) updateScreen(order, setPathFound, setAnimating, animateSpeed)
         handleError(newCost)
         updateNodeGraph(newGraph)
     }
@@ -94,7 +95,7 @@ function App(){
                 function(){
                     let mazeResults = mazeArr[mazeIndex]()
                     //blank function as parameter to not change pathfound
-                    updateScreen(mazeResults[1], () => {}, setAnimating)
+                    updateScreen(mazeResults[1], () => {}, setAnimating, animateSpeed)
                     updateNodeGraph(mazeResults[0])
                 }, 1
             )
@@ -110,7 +111,7 @@ function App(){
         <div className="wrapper">
             <NodeGraphContext.Provider value={[nodeGraph, updateNodeGraph, manipulateNodeGraph]}>
                 <WeightGraphContext.Provider value={[weightGraph, updateWeightGraph]}>
-                    <p className="debug">{changed}</p>
+                    <p className="debug">{changed}<br></br>{animateSpeed}</p>
                     <h3 className="cost">Total Cost: {cost}</h3>
                     <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
                     <button onClick={testMaze}> test </button>
@@ -121,9 +122,10 @@ function App(){
                         findPath={findPath}
                         funcIndex={funcIndex} 
                         setFuncIndex={setFuncIndex} 
-                        animating={animating} 
                         pathFound={pathFound} 
                         setPathFound={setPathFound}
+                        animating={animating} 
+                        setAnimateSpeed={setAnimateSpeed}
                     />
                     <AdvancedPanel
                         generateMaze={generateMaze} 
@@ -139,6 +141,5 @@ function App(){
         </div>
     )
 }
-
 
 ReactDOM.render(<App/>, document.getElementById("root"))

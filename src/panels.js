@@ -68,7 +68,7 @@ function AlgorithmsDropDown({setFuncIndex}){
     )
 }
 
-function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, setPathFound}){
+function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, animating, setAnimateSpeed}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
@@ -78,6 +78,11 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
     function findP(){
         updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         setTimeout(() => findPath(), 1)
+    }
+
+    function updateSpeed(){
+        let speed = document.getElementById("speedSlider").value
+        setAnimateSpeed(speed)
     }
 
     return (
@@ -91,6 +96,12 @@ function SidePanel({findPath, funcIndex, setFuncIndex, animating, pathFound, set
             <h2>Algorithm: {funcNameArr[funcIndex]}</h2>
             <AlgorithmsDropDown setFuncIndex={setFuncIndex}/>
             <ClearButtons animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
+            <div className="flex">
+                <h2>Speed:</h2>
+                <div className="slider_container">
+                    <input type="range" className="slider" min="2" max="16" id="speedSlider" onChange={updateSpeed}></input>
+                </div>
+            </div>
         </div>
     )
 }
