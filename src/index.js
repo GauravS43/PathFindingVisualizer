@@ -1,11 +1,11 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import './index.css'
-
+//algorithm imports
 import { clear, startingNodeGraph, startingWeightGraph } from "./algorithms/generalAlgo"
 import { breadthFirst, depthFirst, greedyBestFirst, dijkstra_aStar, bidirectional_dijkstra_aStar, updateScreen } from "./algorithms/pathFinding"
 import { auxDivide } from "./algorithms/mazeGeneration"
-
+//react context and component imports
 import { NodeGraphContext, WeightGraphContext } from "./graphContext"
 import { SidePanel, AdvancedPanel } from "./components/panels"
 import { Grid } from "./components/grid"
@@ -50,14 +50,13 @@ function App(){
                      () => auxDivide(nodeGraph, [2, 1]),
                     ]
 
-
     function updateWeightGraph(newGraph){
         setWeightGraph(newGraph)
         setChanged(prevState => prevState + 1)
     }
 
     function handleError(newCost){
-        //if path not found, cost = -1 
+        //if path not found, returned cost is -1 
         if (newCost !== -1) {
             setErrorMSG("")
             setCost(newCost)

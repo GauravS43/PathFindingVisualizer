@@ -1,3 +1,4 @@
+/*---------------- DEFAULT GRAPHS AND MODIFICATION ----------------*/
 function startingNodeGraph(){
     let nGraph = []
     for (let y = 0; y < 22; y++){
@@ -36,6 +37,19 @@ function randomizeWeights(){
     return wGraph
 }
 
+function clear(nodeGraph, statusArr){
+    let newNodeGraph = nodeGraph
+    for (let y = 0; y < nodeGraph.length; y++){
+        for (let x = 0; x < nodeGraph[y].length; x++){
+            if (statusArr.includes(nodeGraph[y][x])){
+                newNodeGraph[y][x] = 0
+            }
+        }
+    }
+    return newNodeGraph
+}
+
+/*---------------- FIND FUNCTIONS ----------------*/
 function find(nodeGraph, target){
     for (let y = 0; y < nodeGraph.length; y++){
         if (nodeGraph[y].includes(target)){
@@ -60,22 +74,11 @@ function findNeighbours(x, y, nodeArr){
     return results
 }
 
-function clear(nodeGraph, statusArr){
-    let newNodeGraph = nodeGraph
-    for (let y = 0; y < nodeGraph.length; y++){
-        for (let x = 0; x < nodeGraph[y].length; x++){
-            if (statusArr.includes(nodeGraph[y][x])){
-                newNodeGraph[y][x] = 0
-            }
-        }
-    }
-    return newNodeGraph
-}
 
 export {startingNodeGraph,
         startingWeightGraph,
         randomizeWeights,
+        clear,
         find,
-        findNeighbours,
-        clear
+        findNeighbours
     }

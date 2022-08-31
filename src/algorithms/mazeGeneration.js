@@ -1,5 +1,11 @@
 import { find, findNeighbours } from "./generalAlgo"
 
+//auxiliary function used in recursive divison
+function getRandom(min, max){
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+/*---------------- MAZE GENERATION ALGORITHMS ----------------*/
 function randomDFS(nodeGraph){
     let queue = ["0,0"]
     let nodeArr = []
@@ -33,10 +39,6 @@ function randomDFS(nodeGraph){
     }
 
     return newNodeGraph
-}
-
-function getRandom(min, max){
-    return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 function divide(nodeArr, animateOrder, xRange, yRange, passArr, bias){

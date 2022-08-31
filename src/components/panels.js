@@ -8,6 +8,7 @@ function ClearButtons({animating, pathFound, setPathFound}){
     const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
 
+    //variables inherited from parent determine if buttons works
     function clearWalls(){
         if (!animating && (find(nodeGraph, -1) || find(nodeGraph, 7))){
             manipulateNodeGraph(clear(nodeGraph, [-1, 7]))
@@ -31,6 +32,7 @@ function ClearButtons({animating, pathFound, setPathFound}){
 
     return(
         <div>
+            {/* "clear_button" class darkens button and shows no functionality */}
             <button className={(!animating && (find(nodeGraph, -1) || find(nodeGraph, 7))) ? "" : "clear_button"} onClick={clearWalls}>
                 Clear Walls
             </button>
@@ -47,6 +49,7 @@ function ClearButtons({animating, pathFound, setPathFound}){
 function AlgorithmsDropDown({setFuncIndex}){
     const [algorithmsClicked, setAlgorithmsClicked] = React.useState(false)
 
+    //funcIndex corresponds to a pf function in funcArr in parent
     function changeAlgorithm(ind){
         setFuncIndex(ind)
         setAlgorithmsClicked(false)
@@ -85,6 +88,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, 
                         ]
 
     function findP(){
+        //clears all paths so algorithm runs with only walls
         updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         setTimeout(() => findPath(), 1)
     }
@@ -95,9 +99,10 @@ function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, 
     }
 
     return (
-        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(94%)"}}>
+        <div className="panel_container" style={{transform: visiblePanel ? "translateY(0)" : "translateY(92%)"}}>
             <div className="arrows">
                 <button onClick={() => setVisiblePanel(prevState => !prevState)}> 
+                    {/* arrow symbols */}
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
                 </button>
             </div>
@@ -176,6 +181,7 @@ function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setP
         <div className="panel_container" style={style}>
             <div className="arrows">
                 <button id="up" onClick={() => setVisiblePanel(prevState => !prevState)}> 
+                    {/* arrow symbols */}
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
                 </button>
             </div>

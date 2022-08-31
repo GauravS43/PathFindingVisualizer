@@ -177,6 +177,7 @@ button:hover{
 }
 
 .debug{
+    display: none;
     position: absolute;
     right: 0.5%;
     top: 1%;
@@ -228,12 +229,20 @@ button:hover{
     border-radius: 50%; 
     background: white;
     cursor: pointer;
-  }
+}
   
-  .slider::-moz-range-thumb {
+.slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background: white;
     cursor: pointer;
-  }
+}
+
+.slider::-webkit-slider-thumb:hover {
+    background: lightgray;
+}
+
+.slider::-moz-range-thumb {
+    color: lightgray;
+}

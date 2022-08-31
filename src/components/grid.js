@@ -51,6 +51,7 @@ function Node({x, y, reservedState, setReservedState, enteredState, setEnteredSt
             style={{backgroundColor: color}}
         >
             <h2 className="symbol">{symbol}</h2>
+            {/* only shows weight if not wall, start, or end */}
             <h2 className="weight">{seeWeights && [0,3,4,5,6].includes(state) ? weight : ""}</h2>
         </div>
     )
