@@ -108,7 +108,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, 
             <div className="flex">
                 <h2>Speed:</h2>
                 <div className="slider_container">
-                    <input type="range" className="slider" min="2" max="500" id="speedSlider" onChange={updateSpeed}></input>
+                    <input type="range" className="slider" min="2" max="16" id="speedSlider" onChange={updateSpeed}></input>
                 </div>
             </div>
         </div>

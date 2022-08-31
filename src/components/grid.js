@@ -15,7 +15,7 @@ function Node({x, y, reservedState, setReservedState, enteredState, setEnteredSt
 
     function handleEnter(){
         if (mouseDown && ![1, 2].includes(state)){
-            //preserves state when exiting 
+            //preserves state when exiting
             if ([-1, 7].includes(state)) setEnteredState(-1)
             manipulateNodeGraph(prevState => {prevState[y][x] = reservedState; return prevState})
         }

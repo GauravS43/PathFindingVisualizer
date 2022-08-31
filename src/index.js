@@ -84,7 +84,7 @@ function App(){
     }
 
     function findPath(animate = true){
-        let [newGraph, order, newCost] =  funcArr[(animate ? funcIndex : funcIndex + 5)]()
+        let [newGraph, order, newCost] =  funcArr[(animate ? funcIndex : funcIndex + 7)]()
         if (animate) updateScreen(order, setPathFound, setAnimating, animateSpeed)
         handleError(newCost)
         updateNodeGraph(newGraph)
