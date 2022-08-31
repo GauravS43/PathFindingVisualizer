@@ -14,8 +14,4 @@ const WeightGraphContext = React.createContext()
 // 6 = animated path
 // 7 = animated wall
 
-//TODO
-//ADD MORE MAZE GENERATING ALGORITHMS
-//ADD MORE PATH FINDING ALGORITHMS
-
 export {NodeGraphContext, WeightGraphContext}

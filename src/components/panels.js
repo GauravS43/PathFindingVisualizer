@@ -2,7 +2,7 @@ import React from "react"
 import { clear, find, startingNodeGraph, startingWeightGraph, randomizeWeights } from "../algorithms/generalAlgo"
 import { NodeGraphContext, WeightGraphContext } from "../graphContext"
 
-function ClearButtons({animating, pathFound, setPathFound}){
+function ClearButtons({setCost, animating, pathFound, setPathFound}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
     const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
@@ -17,6 +17,7 @@ function ClearButtons({animating, pathFound, setPathFound}){
 
     function clearPaths(){
         if (pathFound){
+            setCost(0)
             setPathFound(false)
             updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
         }
@@ -24,6 +25,7 @@ function ClearButtons({animating, pathFound, setPathFound}){
 
     function restart(){
         if (!animating){
+            setCost(0)
             setPathFound(false)
             updateNodeGraph(startingNodeGraph())
             updateWeightGraph(startingWeightGraph())
@@ -73,7 +75,7 @@ function AlgorithmsDropDown({setFuncIndex}){
     )
 }
 
-function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, animating, setAnimateSpeed}){
+function SidePanel({setCost, findPath, funcIndex, setFuncIndex, pathFound, setPathFound, animating, setAnimateSpeed}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph= React.useContext(NodeGraphContext)[1]
 
@@ -109,7 +111,7 @@ function SidePanel({findPath, funcIndex, setFuncIndex, pathFound, setPathFound, 
             <button className="first_button" onClick={findP}>Run</button>
             <h2>Algorithm: {funcNameArr[funcIndex]}</h2>
             <AlgorithmsDropDown setFuncIndex={setFuncIndex}/>
-            <ClearButtons animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
+            <ClearButtons setCost={setCost} animating={animating} pathFound={pathFound} setPathFound={setPathFound}/>
             <div className="flex">
                 <h2>Speed:</h2>
                 <div className="slider_container">
@@ -147,7 +149,7 @@ function MazeDropDown({setMazeIndex}){
     )
 }
 
-function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setPathFound, mazeIndex, setMazeIndex}){
+function AdvancedPanel({setCost, generateMaze, animating, seeWeights, setSeeWeights, setPathFound, mazeIndex, setMazeIndex}){
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const updateNodeGraph = React.useContext(NodeGraphContext)[1]
     const updateWeightGraph = React.useContext(WeightGraphContext)[1]
@@ -163,6 +165,7 @@ function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setP
     //nodeGraph is cleared after weights change because old path may not be optimal
     function randomizeW(){
         if (!animating){
+            setCost(0)
             setPathFound(false)
             updateWeightGraph(randomizeWeights())
             updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
@@ -171,6 +174,7 @@ function AdvancedPanel({generateMaze, animating, seeWeights, setSeeWeights, setP
 
     function defaultW(){
         if (!animating){
+            setCost(0)
             setPathFound(false)
             updateWeightGraph(startingWeightGraph())
             updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))

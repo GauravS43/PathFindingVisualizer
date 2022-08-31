@@ -91,6 +91,7 @@ function App(){
 
     function generateMaze(){
         if (!animating){
+            setCost(0)
             updateNodeGraph(clear(nodeGraph, [-1, 3, 4, 5, 6, 7]))
             setPathFound(false)
             //timeout necessary to ensure nodegraph is clear
@@ -116,6 +117,7 @@ function App(){
                     <Grid seeWeights={seeWeights}/>
                     
                     <SidePanel 
+                        setCost={setCost}
                         findPath={findPath}
                         funcIndex={funcIndex} 
                         setFuncIndex={setFuncIndex} 
@@ -125,6 +127,7 @@ function App(){
                         setAnimateSpeed={setAnimateSpeed}
                     />
                     <AdvancedPanel
+                        setCost={setCost}
                         generateMaze={generateMaze} 
                         animating={animating} 
                         seeWeights={seeWeights} 
