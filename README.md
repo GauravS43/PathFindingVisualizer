@@ -19,7 +19,7 @@ Built to experiment and **learn** more in preparation for an upcoming presentati
 
 ![gif](gifs/PF_maze.gif)
 
-##### Manipulate weights
+##### Manipulate Weights
 
 ![gif](gifs/PF_weights.gif)
 
