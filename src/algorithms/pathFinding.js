@@ -1,16 +1,16 @@
 import { find, findNeighbours } from "./generalAlgo"
 
 //auxiliary function used to change background color for statuses 5,6,7
-function updateScreen(order, setPathFound, setAnimating, delay){
+function updateScreen(order, setPathFound, setAnimating, delay) {
     setAnimating(true)
     let color = ["#7E05FF", "#FBFF00", "#96ADE9"]
 
-    for (let i = 0; i < order[0].length; i++){
+    for (let i = 0; i < order[0].length; i++) {
         setTimeout(() => document.getElementById(order[0][i]).style.backgroundColor = color[order[1][i] - 5], i * delay)
     }
-    
+
     setTimeout(
-        function(){
+        function () {
             setPathFound(true)
             setAnimating(false)
         }, (order[0].length - 1) * delay
@@ -19,26 +19,26 @@ function updateScreen(order, setPathFound, setAnimating, delay){
 
 /*---------------- AUXILIARY FUNCTIONS ----------------*/
 
-function smallestDist(dist, nodeArr){
+function smallestDist(dist, nodeArr) {
     let smallest = nodeArr[0]
-    for (let i=1; i< nodeArr.length; i++){
-        if (dist[nodeArr[i]] < dist[smallest]){
+    for (let i = 1; i < nodeArr.length; i++) {
+        if (dist[nodeArr[i]] < dist[smallest]) {
             smallest = nodeArr[i]
         }
     }
     return smallest
 }
 
-function heuristic(node, target){
+function heuristic(node, target) {
     let nodeCoords = node.split(',')
     let targetCoords = target.split(',')
     return Math.abs(nodeCoords[0] - targetCoords[0]) + Math.abs(nodeCoords[1] - targetCoords[1])
 }
 
-function closest(queue, target){
+function closest(queue, target) {
     let closest = queue[0]
-    for (let i = 1; i < queue.length; i++){
-        if (heuristic(closest, target) > heuristic(queue[i], target)){
+    for (let i = 1; i < queue.length; i++) {
+        if (heuristic(closest, target) > heuristic(queue[i], target)) {
             closest = queue[i]
         }
     }
@@ -46,23 +46,23 @@ function closest(queue, target){
 }
 
 //initalizes commonly used variables and structures in multiple functions
-function initializeVariables(nodeGraph){
+function initializeVariables(nodeGraph) {
     return [find(nodeGraph, 1), find(nodeGraph, 2), [[], []]]
 }
-function initializeStructures(nodeGraph, numOfDicts, dictValues){
+function initializeStructures(nodeGraph, numOfDicts, dictValues) {
     let nodeArr = []
     let dictArr = []
 
-    for (let i = 0; i < numOfDicts; i++){
+    for (let i = 0; i < numOfDicts; i++) {
         dictArr[i] = {}
     }
 
-    for (let y = 0; y < nodeGraph.length; y++){
-        for (let x = 0; x < nodeGraph[y].length; x++){
+    for (let y = 0; y < nodeGraph.length; y++) {
+        for (let x = 0; x < nodeGraph[y].length; x++) {
             if (nodeGraph[y][x] !== -1 && nodeGraph[y][x] !== 7) {
                 let coords = `${x},${y}`
                 nodeArr.push(coords)
-                for (let i = 0; i < numOfDicts; i++){
+                for (let i = 0; i < numOfDicts; i++) {
                     dictArr[i][coords] = dictValues[i]
                 }
             }
@@ -72,7 +72,7 @@ function initializeStructures(nodeGraph, numOfDicts, dictValues){
     return [nodeArr, dictArr]
 }
 
-function foundPath(weightGraph, prev, end, includeEnd = false){
+function foundPath(weightGraph, prev, end, includeEnd = false) {
     let sequence = []
     let target = end
     let cost = 0
@@ -85,7 +85,7 @@ function foundPath(weightGraph, prev, end, includeEnd = false){
 
     let limit = includeEnd ? sequence.length : sequence.length - 1
 
-    for (let i = 1; i < limit; i++){
+    for (let i = 1; i < limit; i++) {
         let [x, y] = sequence[i].split(',')
         cost += weightGraph[parseInt(y)][parseInt(x)]
         foundOrder.push(sequence[i])
@@ -96,13 +96,13 @@ function foundPath(weightGraph, prev, end, includeEnd = false){
 
 /*---------------- PATH FINDING ALGORITHMS ----------------*/
 
-function dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
-    let [start, end, animateOrder] = initializeVariables(nodeGraph) 
+function dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic) {
+    let [start, end, animateOrder] = initializeVariables(nodeGraph)
     let [nodeArr, [dist, prev]] = initializeStructures(nodeGraph, 2, [Infinity, undefined])
     let newNodeGraph = nodeGraph
     dist[start] = 0
 
-    while (nodeArr.length > 0){
+    while (nodeArr.length > 0) {
         let node = smallestDist(dist, nodeArr)
         //All possible paths traversed
         if (dist[node] === Infinity) break
@@ -114,14 +114,14 @@ function dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
             animateOrder[1].push(stateArr[0])
             newNodeGraph[parseInt(y)][parseInt(x)] = stateArr[0]
         }
-    
+
         nodeArr.splice(nodeArr.indexOf(node), 1)
 
-        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
-            if (neighbour === end){
+        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)) {
+            if (neighbour === end) {
                 prev[neighbour] = node
                 let [cost, foundOrder] = foundPath(weightGraph, prev, end)
-                for (let i = 0; i < foundOrder.length; i++){
+                for (let i = 0; i < foundOrder.length; i++) {
                     let [pX, pY] = foundOrder[i].split(',')
                     animateOrder[0].push(foundOrder[i])
                     animateOrder[1].push(stateArr[1])
@@ -135,7 +135,7 @@ function dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
             //A Star algorithm includes heuristic, dijkstra does not
             if (useHeuristic) tempDist += heuristic(neighbour, end)
 
-            if (tempDist < dist[neighbour] && dist[node] !== Infinity){
+            if (tempDist < dist[neighbour] && dist[node] !== Infinity) {
                 dist[neighbour] = tempDist
                 prev[neighbour] = node
             }
@@ -145,21 +145,21 @@ function dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
     return [newNodeGraph, animateOrder, -1]
 }
 
-function bidirectional_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic){
-    let [start, end, animateOrder] = initializeVariables(nodeGraph) 
+function bidirectional_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuristic) {
+    let [start, end, animateOrder] = initializeVariables(nodeGraph)
     let [startingNodeArr, [distFromStart, distFromEnd, prev]] = initializeStructures(nodeGraph, 3, [Infinity, Infinity, undefined])
     let newNodeGraph = nodeGraph
     let endingNodeArr = [...startingNodeArr]
 
     distFromStart[start] = 0
     distFromEnd[end] = 0
-   
+
     //2 distArrs and nodeArrs for seperate searches
     let distArr = [distFromStart, distFromEnd]
     let nodeArrs = [startingNodeArr, endingNodeArr]
     let arrInd = 0
 
-    while (startingNodeArr.length > 0){
+    while (startingNodeArr.length > 0) {
         let node = smallestDist(distArr[arrInd], nodeArrs[arrInd])
         //All possible paths traversed
         if (distArr[arrInd][node] === Infinity) break
@@ -173,21 +173,21 @@ function bidirectional_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuri
 
         nodeArrs[arrInd].splice(nodeArrs[arrInd].indexOf(node), 1)
 
-        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArrs[arrInd])){
+        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArrs[arrInd])) {
             //found connection between searches
-            if (startingNodeArr.includes(neighbour) !== endingNodeArr.includes(neighbour)){
-                for (const n of findNeighbours(parseInt(x), parseInt(y), nodeArrs[(arrInd === 0) ? 1 : 0])){
-                    if (!nodeArrs[arrInd].includes(n)){
+            if (startingNodeArr.includes(neighbour) !== endingNodeArr.includes(neighbour)) {
+                for (const n of findNeighbours(parseInt(x), parseInt(y), nodeArrs[(arrInd === 0) ? 1 : 0])) {
+                    if (!nodeArrs[arrInd].includes(n)) {
                         //backtracks from current node
                         let [cost, foundOrder] = foundPath(weightGraph, prev, node, true)
                         //backtracks from the visited neighbour
                         let [addCost, addOrder] = foundPath(weightGraph, prev, n, true)
-                        
+
                         let order = [...foundOrder, ...addOrder]
-                        cost += addCost 
+                        cost += addCost
 
                         //makes changes using both backtracks
-                        for (let i = 0; i < order.length; i++){
+                        for (let i = 0; i < order.length; i++) {
                             let [pX, pY] = order[i].split(',')
                             animateOrder[0].push(order[i])
                             animateOrder[1].push(stateArr[1])
@@ -203,7 +203,7 @@ function bidirectional_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuri
             //A Star algorithm includes heuristic, dijkstra does not
             if (useHeuristic) tempDist += heuristic(neighbour, (arrInd === 0) ? end : start)
 
-            if (tempDist < distArr[arrInd][neighbour] && distArr[arrInd][node] !== Infinity){
+            if (tempDist < distArr[arrInd][neighbour] && distArr[arrInd][node] !== Infinity) {
                 distArr[arrInd][neighbour] = tempDist
                 prev[neighbour] = node
             }
@@ -214,22 +214,22 @@ function bidirectional_dijkstra_aStar(nodeGraph, weightGraph, stateArr, useHeuri
     return [newNodeGraph, animateOrder, -1]
 }
 
-function depthFirst(nodeGraph, weightGraph, stateArr){
-    let [start, end, animateOrder] = initializeVariables(nodeGraph) 
+function depthFirst(nodeGraph, weightGraph, stateArr) {
+    let [start, end, animateOrder] = initializeVariables(nodeGraph)
     let [nodeArr, [visited]] = initializeStructures(nodeGraph, 1, [false])
     let newNodeGraph = nodeGraph
-    
+
     let queue = [start]
 
-    while (queue.length !== 0){
+    while (queue.length !== 0) {
         //.shift() would make breadthFirst
-        let node = queue.pop() 
+        let node = queue.pop()
         let [x, y] = node.split(',')
 
-        if (node === end){
+        if (node === end) {
             let l = animateOrder[0].length
             let cost = 0
-            for (let i = 0; i < l; i++){
+            for (let i = 0; i < l; i++) {
                 let [pX, pY] = animateOrder[0][i].split(',')
                 animateOrder[0].push(animateOrder[0][i])
                 animateOrder[1].push(stateArr[1])
@@ -239,16 +239,16 @@ function depthFirst(nodeGraph, weightGraph, stateArr){
             return [newNodeGraph, animateOrder, cost]
         }
 
-        if (!visited[node]){
+        if (!visited[node]) {
             visited[node] = true
 
-            if (node !== start){
+            if (node !== start) {
                 newNodeGraph[parseInt(y)][parseInt(x)] = stateArr[0]
                 animateOrder[0].push(node)
                 animateOrder[1].push(stateArr[0])
             }
 
-            for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
+            for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)) {
                 if (!visited[neighbour]) queue.push(neighbour)
             }
         }
@@ -257,24 +257,24 @@ function depthFirst(nodeGraph, weightGraph, stateArr){
     return [newNodeGraph, animateOrder, -1]
 }
 
-function breadthFirst(nodeGraph, weightGraph, stateArr){
-    let [start, end, animateOrder] = initializeVariables(nodeGraph) 
+function breadthFirst(nodeGraph, weightGraph, stateArr) {
+    let [start, end, animateOrder] = initializeVariables(nodeGraph)
     let [nodeArr, [visited, prev]] = initializeStructures(nodeGraph, 2, [false, undefined])
     let newNodeGraph = nodeGraph
     let queue = [start]
 
-    while (queue.length !== 0){
+    while (queue.length !== 0) {
         //.pop() would make depthFirst
-        let node = queue.shift() 
+        let node = queue.shift()
         let [x, y] = node.split(',')
 
-        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
+        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)) {
             if (visited[neighbour]) prev[node] = neighbour
         }
 
-        if (node === end){
+        if (node === end) {
             let [cost, foundOrder] = foundPath(weightGraph, prev, end)
-            for (let i = 0; i < foundOrder.length; i++){
+            for (let i = 0; i < foundOrder.length; i++) {
                 let [pX, pY] = foundOrder[i].split(',')
                 animateOrder[0].push(foundOrder[i])
                 animateOrder[1].push(stateArr[1])
@@ -283,16 +283,16 @@ function breadthFirst(nodeGraph, weightGraph, stateArr){
             return [newNodeGraph, animateOrder, cost]
         }
 
-        if (!visited[node]){
+        if (!visited[node]) {
             visited[node] = true
 
-            if (node !== start){
+            if (node !== start) {
                 newNodeGraph[parseInt(y)][parseInt(x)] = stateArr[0]
                 animateOrder[0].push(node)
                 animateOrder[1].push(stateArr[0])
             }
 
-            for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
+            for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)) {
                 if (!visited[neighbour]) queue.push(neighbour)
             }
         }
@@ -301,13 +301,13 @@ function breadthFirst(nodeGraph, weightGraph, stateArr){
     return [newNodeGraph, animateOrder, -1]
 }
 
-function greedyBestFirst(nodeGraph, weightGraph, stateArr){
-    let [start, end, animateOrder] = initializeVariables(nodeGraph) 
+function greedyBestFirst(nodeGraph, weightGraph, stateArr) {
+    let [start, end, animateOrder] = initializeVariables(nodeGraph)
     let [nodeArr, [visited, prev]] = initializeStructures(nodeGraph, 2, [false, undefined])
     let newNodeGraph = nodeGraph
     let queue = [start]
 
-    while(queue){
+    while (queue) {
         let node = closest(queue, end)
         visited[node] = true
         let [x, y] = node.split(',')
@@ -315,7 +315,7 @@ function greedyBestFirst(nodeGraph, weightGraph, stateArr){
 
         if (node === end) {
             let [cost, foundOrder] = foundPath(weightGraph, prev, end)
-            for (let i = 0; i < foundOrder.length; i++){
+            for (let i = 0; i < foundOrder.length; i++) {
                 let [pX, pY] = foundOrder[i].split(',')
                 animateOrder[0].push(foundOrder[i])
                 animateOrder[1].push(stateArr[1])
@@ -324,13 +324,13 @@ function greedyBestFirst(nodeGraph, weightGraph, stateArr){
             return [newNodeGraph, animateOrder, cost]
         }
 
-        if (node !== start){
+        if (node !== start) {
             newNodeGraph[parseInt(y)][parseInt(x)] = stateArr[0]
             animateOrder[0].push(node)
             animateOrder[1].push(stateArr[0])
-        } 
+        }
 
-        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)){
+        for (const neighbour of findNeighbours(parseInt(x), parseInt(y), nodeArr)) {
             if (!visited[neighbour]) {
                 queue.push(neighbour)
                 prev[neighbour] = node
@@ -341,10 +341,11 @@ function greedyBestFirst(nodeGraph, weightGraph, stateArr){
     return [newNodeGraph, animateOrder, -1]
 }
 
-export {dijkstra_aStar,
-        bidirectional_dijkstra_aStar,
-        depthFirst, 
-        breadthFirst,
-        greedyBestFirst,
-        updateScreen,
-    }
+export {
+    dijkstra_aStar,
+    bidirectional_dijkstra_aStar,
+    depthFirst,
+    breadthFirst,
+    greedyBestFirst,
+    updateScreen,
+}

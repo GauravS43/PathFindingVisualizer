@@ -1,18 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
 }
 
-.wrapper{
+.wrapper {
     position: relative;
     width: 100vw;
     height: 100vh;
+    min-height: 720px;
     overflow: hidden;
 }
 
-h1{
+h1 {
     width: 100%;
     margin: 0;
     color: white;
@@ -21,7 +22,7 @@ h1{
     text-align: center;
 }
 
-h2{
+h2 {
     width: 100%;
     margin-top: 2.5%;
     margin-bottom: 6%;
@@ -31,7 +32,7 @@ h2{
     text-align: center;
 }
 
-button{
+button {
     background-color: transparent;
     border: 2px solid white;
     border-radius: 30px;
@@ -46,23 +47,23 @@ button{
     transition: 0.2s ease;
 }
 
-.flex{
+.flex {
     display: flex;
-  }
+}
 
-.first_button{
+.first_button {
     margin-bottom: 0%;
     margin-top: 8%;
 }
 
-button:hover{
+button:hover {
     color: black;
     background-color: white;
 }
 
 /*-----------SidePanel-----------*/
 
-.panel_container{
+.panel_container {
     position: absolute;
     width: 20%;
     height: 32vw;
@@ -71,15 +72,36 @@ button:hover{
     border-radius: 20px;
     transition: 0.6s ease;
     background-color: #FA5A00;
-    top: 27%;
+    top: 17%;
     left: 2%;
 }
 
-.panel_container h2{
+.panel_container:nth-of-type(3) {
+    background-color: #2851F6;
+    left: 78%;
+}
+
+.panel_container h2 {
     font-size: 1.3vw;
 }
 
-.flex h2{
+.bas_panel_up {
+    top: 16%;
+}
+
+.bas_panel_down {
+    top: 82%;
+}
+
+.adv_panel_up {
+    top: 16%;
+}
+
+.adv_panel_down {
+    top: 86%;
+}
+
+.flex h2 {
     font-size: 1.5vw;
     margin: 0;
     margin-left: 10%;
@@ -87,11 +109,11 @@ button:hover{
     text-align: left;
 }
 
-.arrows{
+.arrows {
     height: 10%;
 }
 
-.arrows button{
+.arrows button {
     width: 40%;
     margin: 30%;
     text-align: center;
@@ -100,7 +122,7 @@ button:hover{
 
 /*-----------DropDown-----------*/
 
-.dropdown{
+.dropdown {
     position: relative;
     margin-top: -5%;
     display: block;
@@ -119,8 +141,8 @@ button:hover{
     background-color: lightcoral;
     font-size: 18px;
 }
-  
-.dropdown_content h3:hover{
+
+.dropdown_content h3:hover {
     color: black;
     background-color: white;
     border-radius: 20px;
@@ -128,12 +150,12 @@ button:hover{
 
 /*-----------GRID-----------*/
 
-.grid_container{
+.grid_container {
     width: 100%;
     margin: auto;
 }
 
-.grid{
+.grid {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -143,40 +165,40 @@ button:hover{
     grid-template-columns: repeat(41, 2.425vw);
 }
 
-.block{
+.block {
     border: 1px solid #96ADE9;
     background-color: white;
     font-family: 'Nunito', sans-serif;
-    -webkit-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none; 
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.symbol{
+.symbol {
     color: black;
     margin: auto;
     margin-top: 5.5%;
     margin-left: -2%;
 }
 
-.weight{
+.weight {
     color: black;
 }
 
 /*clearButton*/
 
-.clear_button{
+.clear_button {
     color: lightgray;
     border: 2px solid lightgray;
 }
 
-.clear_button:hover{
+.clear_button:hover {
     color: lightgray;
     border: 2px solid lightgray;
     background-color: transparent;
 }
 
-.debug{
+.debug {
     display: none;
     position: absolute;
     right: 0.5%;
@@ -184,7 +206,7 @@ button:hover{
     z-index: 2;
 }
 
-.cost{
+.cost {
     font-family: 'Nunito', sans-serif;
     position: absolute;
     left: 0.5%;
@@ -195,7 +217,7 @@ button:hover{
     border-radius: 50px;
 }
 
-.error_msg{
+.error_msg {
     font-family: 'Nunito', sans-serif;
     position: absolute;
     right: 0.5%;
@@ -203,14 +225,14 @@ button:hover{
     z-index: 1;
     background-color: #ff9a9c;
     padding: 1%;
-    border-radius: 50px;   
+    border-radius: 50px;
 }
 
-.slider_container{
+.slider_container {
     width: 100%;
 }
 
-.slider{
+.slider {
     margin-top: 6.5%;
     -webkit-appearance: none;
     width: 75%;
@@ -218,7 +240,7 @@ button:hover{
     margin-left: 10%;
     direction: rtl;
     background: #ae3e00;
-    border-radius: 20px;  
+    border-radius: 20px;
 }
 
 .slider::-webkit-slider-thumb {
@@ -226,11 +248,11 @@ button:hover{
     appearance: none;
     width: 20px;
     height: 20px;
-    border-radius: 50%; 
+    border-radius: 50%;
     background: white;
     cursor: pointer;
 }
-  
+
 .slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
@@ -245,4 +267,84 @@ button:hover{
 
 .slider::-moz-range-thumb {
     color: lightgray;
+}
+
+@media screen and (max-width:800px) {
+    .grid {
+        grid-template-rows: repeat(35, 2.425vw);
+        grid-template-columns: repeat(41, 2.425vw);
+    }
+
+    .panel_container {
+        width: 98%;
+        height: fit-content;
+        top: 60%;
+        left: 1%;
+    }
+
+    .panel_container:nth-of-type(3) {
+        display: none;
+    }
+
+    .panel_container h2 {
+        display: none;
+        font-size: 20px;
+    }
+
+    .arrows {
+        display: none;
+    }
+
+    .flex {
+        display: none;
+    }
+
+    button {
+        font-size: 25px;
+        width: 29%;
+        margin: auto;
+        margin: 2%;
+    }
+
+    .first_button {
+        width: 90%;
+        margin-left: 5%;
+        margin-top: 2%;
+        margin-bottom: 5%;
+    }
+
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown button {
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    .dropdown_content {
+        font-size: 15px;
+    }
+}
+
+/*
+button {
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 30px;
+    color: white;
+    font-size: 2vw;
+    width: 84%;
+    margin: 8%;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    height: fit-content;
+    font-family: 'Nunito', sans-serif;
+    transition: 0.2s ease;
+}*/
+
+@media screen and (max-width:500px) {
+    .panel_container {
+        background-color: red;
+    }
 }

@@ -14,4 +14,4 @@ const WeightGraphContext = React.createContext()
 // 6 = animated path
 // 7 = animated wall
 
-export {NodeGraphContext, WeightGraphContext}
+export { NodeGraphContext, WeightGraphContext }
