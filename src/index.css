@@ -9,7 +9,7 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    min-height: 720px;
+    min-height: 800px;
     overflow: hidden;
 }
 
@@ -345,6 +345,16 @@ button {
 
 @media screen and (max-width:500px) {
     .panel_container {
-        background-color: red;
+        top: 65%;
+        left: 1%;
+    }
+
+    .grid {
+        grid-template-rows: repeat(35, 5vw);
+        grid-template-columns: repeat(41, 5vw);
+    }
+
+    .symbol {
+        font-size: 15px;
     }
 }
