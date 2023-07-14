@@ -9,7 +9,7 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    min-height: 800px;
+    max-height: 600px;
     overflow: hidden;
 }
 
