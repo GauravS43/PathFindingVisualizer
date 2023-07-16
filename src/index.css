@@ -399,6 +399,10 @@ button:hover {
     .dropdown_content {
         font-size: 15px;
     }
+
+    .modal_wrapper {
+        display: none;
+    }
 }
 
 /*
