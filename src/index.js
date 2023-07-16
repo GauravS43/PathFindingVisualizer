@@ -9,6 +9,7 @@ import { auxDivide } from "./algorithms/mazeGeneration"
 import { NodeGraphContext, WeightGraphContext } from "./graphContext"
 import { SidePanel, AdvancedPanel } from "./components/panels"
 import { Grid } from "./components/grid"
+import { Modal } from "./components/modal"
 
 function App() {
     const [nodeGraph, setNodeGraph] = React.useState(startingNodeGraph())
@@ -136,6 +137,7 @@ function App() {
                         mazeIndex={mazeIndex}
                         setMazeIndex={setMazeIndex}
                     />
+                    <Modal />
                 </WeightGraphContext.Provider>
             </NodeGraphContext.Provider>
         </div>
