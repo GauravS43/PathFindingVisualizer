@@ -115,7 +115,7 @@ function App() {
                     <h3 className="cost">Total Cost: {cost}</h3>
                     <h3 className="error_msg" style={errorStyle}>{errorMSG}</h3>
 
-                    <Grid seeWeights={seeWeights} />
+                    <Grid seeWeights={seeWeights} animating={animating} />
 
                     <SidePanel
                         setCost={setCost}

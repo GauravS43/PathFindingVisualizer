@@ -2,7 +2,7 @@ import React from "react"
 import { NodeGraphContext, WeightGraphContext } from "../graphContext"
 
 
-function Node({ x, y, reservedState, setReservedState, enteredState, setEnteredState, mouseDown, seeWeights }) {
+function Node({ x, y, reservedState, setReservedState, enteredState, setEnteredState, mouseDown, seeWeights, animating }) {
     const nodeGraph = React.useContext(NodeGraphContext)[0]
     const manipulateNodeGraph = React.useContext(NodeGraphContext)[2]
     const weightGraph = React.useContext(WeightGraphContext)[0]
@@ -32,9 +32,11 @@ function Node({ x, y, reservedState, setReservedState, enteredState, setEnteredS
     }
 
     function handleDown() {
-        if ([1, 2].includes(state)) { setReservedState(state) }
-        else if ([-1, 7].includes(state)) { manipulateNodeGraph(prevState => { prevState[y][x] = 0; return prevState }) }
-        else { manipulateNodeGraph(prevState => { prevState[y][x] = reservedState; return prevState }) }
+        if (!animating) {
+            if ([1, 2].includes(state)) { setReservedState(state) }
+            else if ([-1, 7].includes(state)) { manipulateNodeGraph(prevState => { prevState[y][x] = 0; return prevState }) }
+            else { manipulateNodeGraph(prevState => { prevState[y][x] = reservedState; return prevState }) }
+        }
     }
 
     return (
@@ -54,7 +56,7 @@ function Node({ x, y, reservedState, setReservedState, enteredState, setEnteredS
     )
 }
 
-export function Grid({ seeWeights }) {
+export function Grid({ seeWeights, animating }) {
     //stores state that will be set when mouseDown
     const [reservedState, setReservedState] = React.useState(-1)
     //stores old state that reservedState overwrites
@@ -62,7 +64,9 @@ export function Grid({ seeWeights }) {
     const [mouseDown, setMouseDown] = React.useState(false)
 
     document.body.onmousedown = function () {
-        setMouseDown(true)
+        if (!animating) {
+            setMouseDown(true)
+        }
     }
 
     document.body.onmouseup = function () {
@@ -84,6 +88,7 @@ export function Grid({ seeWeights }) {
                     setEnteredState={setEnteredState}
                     mouseDown={mouseDown}
                     seeWeights={seeWeights}
+                    animating={animating}
                 />
             )
         }
