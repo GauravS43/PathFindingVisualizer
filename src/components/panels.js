@@ -16,7 +16,7 @@ function ClearButtons({ setCost, animating, pathFound, setPathFound }) {
     }
 
     function clearPaths() {
-        if (pathFound) {
+        if (pathFound && !animating) {
             setCost(0)
             setPathFound(false)
             updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
@@ -38,7 +38,7 @@ function ClearButtons({ setCost, animating, pathFound, setPathFound }) {
             <button className={(!animating && (find(nodeGraph, -1) || find(nodeGraph, 7))) ? "" : "clear_button"} onClick={clearWalls}>
                 Clear Walls
             </button>
-            <button className={pathFound ? "" : "clear_button"} onClick={clearPaths}>
+            <button className={pathFound && !animating ? "" : "clear_button"} onClick={clearPaths}>
                 Clear Path
             </button>
             <button className={animating ? "clear_button" : ""} onClick={restart}>
@@ -91,8 +91,10 @@ function SidePanel({ setCost, findPath, funcIndex, setFuncIndex, pathFound, setP
 
     function findP() {
         //clears all paths so algorithm runs with only walls
-        updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
-        setTimeout(() => findPath(), 1)
+        if (!animating) {
+            updateNodeGraph(clear(nodeGraph, [3, 4, 5, 6]))
+            setTimeout(() => findPath(), 1)
+        }
     }
 
     function updateSpeed() {
@@ -108,7 +110,7 @@ function SidePanel({ setCost, findPath, funcIndex, setFuncIndex, pathFound, setP
                     {String.fromCharCode((visiblePanel ? "9660" : "9650"))}
                 </button>
             </div>
-            <button className="first_button" onClick={findP}>Run</button>
+            <button className={animating ? "first_button clear_button" : "first_button"} onClick={findP}>Run</button>
             <h2>Algorithm: {funcNameArr[funcIndex]}</h2>
             <AlgorithmsDropDown setFuncIndex={setFuncIndex} />
             <ClearButtons setCost={setCost} animating={animating} pathFound={pathFound} setPathFound={setPathFound} />
